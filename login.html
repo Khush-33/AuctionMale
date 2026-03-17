@@ -228,7 +228,7 @@
     if (!uname || !pwd) { showErr('Please enter username and password.'); return; }
 
     // Map username → email for Firebase Auth
-    const emailMap = { 'khush': 'khushjain8419@gmail.com' };
+    const emailMap = { 'khush': 'khushjain8419@gmail.com', 'kavish': 'kavish.siroya@gmail.com' };
     const email = emailMap[uname.toLowerCase()];
     if (!email) { showErr('Invalid username.'); return; }
 
