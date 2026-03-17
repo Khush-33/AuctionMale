@@ -231,7 +231,50 @@ tr:hover td{background:rgba(255,255,255,0.02)}
   </div>
 
   <!-- AUCTION -->
-  <div id="page-auction" class="page"><div id="auctionContent"></div></div>
+  <div id="page-auction" class="page">
+  <div id="auctionContent"></div>
+  <!-- MAX BID CALCULATOR -->
+  <div class="card" style="margin-top:1.5rem;border:1px solid rgba(59,130,246,0.2);background:rgba(59,130,246,0.04)">
+    <div style="font-size:13px;font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:8px">
+      🧮 Max Bid Calculator
+      <span style="font-size:11px;color:var(--muted);font-weight:400">— how much can a team safely bid?</span>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end">
+      <div>
+        <label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Team</label>
+        <select id="calcTeam" onchange="calcMaxBid()" style="padding:7px 10px;border:1px solid var(--border2);border-radius:var(--radius);font-size:13px;background:var(--surface);color:var(--text);font-family:'DM Sans',sans-serif;min-width:180px">
+          <option value="">Select team...</option>
+        </select>
+      </div>
+      <div style="background:var(--surface2);border-radius:var(--radius);padding:8px 14px;border:1px solid var(--border);min-width:150px">
+        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Players still needed</div>
+        <div id="calcPlayersLeftDisplay" style="font-size:20px;font-weight:700;color:var(--text)">—</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px">to complete squad of 7</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;padding:7px 12px;background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.2);border-radius:var(--radius);cursor:pointer" onclick="document.getElementById('calcIsIcon').click()">
+        <input type="checkbox" id="calcIsIcon" onchange="calcMaxBid()" style="width:15px;height:15px;cursor:pointer;accent-color:var(--gold)">
+        <label for="calcIsIcon" style="font-size:12px;color:var(--gold);cursor:pointer;font-weight:500;white-space:nowrap">⭐ Icon Player (cap ₹5L)</label>
+      </div>
+    </div>
+    <div id="calcResult" style="margin-top:14px;display:none">
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <div style="background:var(--surface2);border-radius:var(--radius);padding:10px 16px;border:1px solid var(--border)">
+          <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">Budget Remaining</div>
+          <div id="calcRemBudget" style="font-size:18px;font-weight:600;color:var(--accent)"></div>
+        </div>
+        <div style="background:var(--surface2);border-radius:var(--radius);padding:10px 16px;border:1px solid var(--border)">
+          <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">Reserve for remaining</div>
+          <div id="calcReserve" style="font-size:18px;font-weight:600;color:#f97316"></div>
+        </div>
+        <div style="background:rgba(59,130,246,0.1);border-radius:var(--radius);padding:10px 16px;border:1px solid rgba(59,130,246,0.25)">
+          <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">Max Safe Bid (this player)</div>
+          <div id="calcMaxBidVal" style="font-size:22px;font-weight:700;color:var(--accent)"></div>
+        </div>
+      </div>
+      <div id="calcNote" style="font-size:12px;color:var(--muted);margin-top:10px"></div>
+    </div>
+  </div>
+</div>
 
   <!-- PLAYERS -->
   <div id="page-players" class="page">
@@ -290,7 +333,7 @@ tr:hover td{background:rgba(255,255,255,0.02)}
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px">
         <div><label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Normal Base (₹)</label><input id="ru-normal" type="number" value="50000" style="padding:7px 10px;border:1px solid var(--border2);border-radius:var(--radius);font-size:13px;background:rgba(255,255,255,.04);color:var(--text);width:100%;font-family:'DM Sans',sans-serif"></div>
         <div><label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Icon Base (₹)</label><input id="ru-icon" type="number" value="200000" style="padding:7px 10px;border:1px solid var(--border2);border-radius:var(--radius);font-size:13px;background:rgba(255,255,255,.04);color:var(--text);width:100%;font-family:'DM Sans',sans-serif"></div>
-        <div><label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Starting Budget (₹)</label><input id="ru-budget" type="number" value="500000" style="padding:7px 10px;border:1px solid var(--border2);border-radius:var(--radius);font-size:13px;background:rgba(255,255,255,.04);color:var(--text);width:100%;font-family:'DM Sans',sans-serif"></div>
+        <div><label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Starting Budget (₹)</label><input id="ru-budget" type="number" value="1000000" style="padding:7px 10px;border:1px solid var(--border2);border-radius:var(--radius);font-size:13px;background:rgba(255,255,255,.04);color:var(--text);width:100%;font-family:'DM Sans',sans-serif"></div>
         <div><label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Max Bid Normal (₹)</label><input id="ru-maxnormal" type="number" value="300000" style="padding:7px 10px;border:1px solid var(--border2);border-radius:var(--radius);font-size:13px;background:rgba(255,255,255,.04);color:var(--text);width:100%;font-family:'DM Sans',sans-serif"></div>
         <div><label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Max Bid Icon (₹)</label><input id="ru-maxicon" type="number" value="600000" style="padding:7px 10px;border:1px solid var(--border2);border-radius:var(--radius);font-size:13px;background:rgba(255,255,255,.04);color:var(--text);width:100%;font-family:'DM Sans',sans-serif"></div>
         <div><label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Top-up Amount (₹)</label><input id="ru-topup" type="number" value="100000" style="padding:7px 10px;border:1px solid var(--border2);border-radius:var(--radius);font-size:13px;background:rgba(255,255,255,.04);color:var(--text);width:100%;font-family:'DM Sans',sans-serif"></div>
@@ -372,7 +415,7 @@ tr:hover td{background:rgba(255,255,255,0.02)}
     <h3 id="teamModalTitle">Add Team</h3>
     <div class="fr"><label>Team Name *</label><input id="tName" placeholder="e.g. RB Challengers"></div>
     <div class="fr"><label>Owner / Captain</label><input id="tOwner" placeholder="Owner name"></div>
-    <div class="fr"><label>Starting Budget (₹)</label><input id="tBudget" type="number" value="500000"></div>
+    <div class="fr"><label>Starting Budget (₹)</label><input id="tBudget" type="number" value="1000000"></div>
     <input type="hidden" id="tEditId">
     <div class="mbtns"><button class="btn btn-p" onclick="saveTeam()">Save Team</button><button class="btn" onclick="closeModal('addTeamModal')">Cancel</button></div>
   </div>
@@ -420,15 +463,15 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 // ─── DEFAULTS ───────────────────────────────────────────
-const DEFAULT_RULES = {normalBase:50000,iconBase:200000,startBudget:500000,maxNormal:300000,maxIcon:600000,topupAmt:100000};
+const DEFAULT_RULES = {normalBase:50000,iconBase:200000,startBudget:1000000,maxNormal:300000,maxIcon:600000,topupAmt:100000};
 const DEFAULT_TEAMS = [
-  {id:1,name:"RB Challengers",owner:"",budget:500000,topupUsed:false},
-  {id:2,name:"Mishty Mavericks",owner:"",budget:500000,topupUsed:false},
-  {id:3,name:"Ca Ashish",owner:"",budget:500000,topupUsed:false},
-  {id:4,name:"Bafna Warriors",owner:"",budget:500000,topupUsed:false},
-  {id:5,name:"Siddhachal Dhurandars",owner:"",budget:500000,topupUsed:false},
-  {id:6,name:"Gadiya Strikers",owner:"",budget:500000,topupUsed:false},
-  {id:7,name:"Siddhachal Warriors",owner:"",budget:500000,topupUsed:false}
+  {id:1,name:"RB Challengers",owner:"",budget:1000000,topupUsed:false},
+  {id:2,name:"Mishty Mavericks",owner:"",budget:1000000,topupUsed:false},
+  {id:3,name:"Ca Ashish",owner:"",budget:1000000,topupUsed:false},
+  {id:4,name:"Bafna Warriors",owner:"",budget:1000000,topupUsed:false},
+  {id:5,name:"Siddhachal Dhurandars",owner:"",budget:1000000,topupUsed:false},
+  {id:6,name:"Gadiya Strikers",owner:"",budget:1000000,topupUsed:false},
+  {id:7,name:"Siddhachal Warriors",owner:"",budget:1000000,topupUsed:false}
 ];
 const PLAYER_NAMES=["Vipul Pradeep Oswal","Daksh Oswal","Shouraya Rajeev Banthiya","Rajeev Banthiya","Goutam Parmar","Manish Jain","Prasad Katariya","Jai Chawla","Rishil Jain","Harshal Bafna","Sagar Raval","Vishal Ravindra Nangare","Piyush Thakkar","Shreyansh Jain","Siddharth Jain","Devansh Parekh","Akshay Ashok Oswal","Pratik Mehta","Karan Rathod","Siddhant Rohit Gadiya","Saurabh Suresh Mehta","Shreepal Jain","Rahul Jain","Nirav Oswal","Amol Ajit Kucheriya","Ashish S Mehta","Moksh Jain","Samyak Oswal","Ansh Paresh Bafna","Paresh Bafna","Panav Siroya","Khush Prashant Jain","Kavish Siroya","Sayyam Jain","Aarush Shah","Prashant Motilal Jain","Tanish Oswal","Dhwaj Nilesh Bhandari","Ankit","Yug Mehta","Mukesh Bafna","Tanay Banthiya","Hitesh Khivsara","Dungarmal","Mahesh Bhutada","Vishal M Siroya","Nihal","Nitesh Bafna","Hitesh Bafna","Kavish Oswal","Dweep Porwal"];
 const PLAYER_AGES=[37,15,16,45,34,41,35,35,16,28,20,28,45,35,35,15,29,30,16,15,36,26,42,16,45,45,22,17,14,42,17,19,20,23,14,46,21,15,40,20,40,21,37,40,43,49,31,35,35,15,17];
@@ -578,7 +621,7 @@ window.saveRules = async () => {
   if(!isAdmin){showMsg('Admin only','err');return}
   rules.normalBase=parseInt(document.getElementById('ru-normal').value)||50000;
   rules.iconBase=parseInt(document.getElementById('ru-icon').value)||200000;
-  rules.startBudget=parseInt(document.getElementById('ru-budget').value)||500000;
+  rules.startBudget=parseInt(document.getElementById('ru-budget').value)||1000000;
   rules.maxNormal=parseInt(document.getElementById('ru-maxnormal').value)||300000;
   rules.maxIcon=parseInt(document.getElementById('ru-maxicon').value)||600000;
   rules.topupAmt=parseInt(document.getElementById('ru-topup').value)||100000;
@@ -656,11 +699,11 @@ function renderTeams() {
     </div>`;}).join('');
 }
 
-function renderSquads() {
+window.renderSquads = function renderSquads() {
   const tabs=document.getElementById('squadTabs'),content=document.getElementById('squadContent'); if(!tabs||!content)return;
   if(!teams.length){tabs.innerHTML='';content.innerHTML='<p style="font-size:13px;color:var(--muted)">No teams yet.</p>';return}
-  const idx=Math.min(sqTab,teams.length-1);
-  tabs.innerHTML=teams.map((t,i)=>`<div class="tt ${i===idx?'active':''}" onclick="sqTab=${i};renderSquads()">${t.name}</div>`).join('');
+  const idx=Math.min(window.sqTab||0,teams.length-1);
+  tabs.innerHTML=teams.map((t,i)=>`<div class="tt ${i===idx?'active':''}" onclick="window.sqTab=${i};window.renderSquads()">${t.name}</div>`).join('');
   const t=teams[idx],tp=players.filter(p=>p.team===t.id),sp=teamSpent(t.id),rem=teamRem(t),icons=tp.filter(p=>p.icon).length;
   if(!tp.length){content.innerHTML=`<div class="card"><div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1rem">
     <div class="mc" style="flex:1"><div class="mc-l">Budget</div><div class="mc-v" style="font-size:16px">${fmt(t.budget)}</div></div>
@@ -677,8 +720,7 @@ function renderSquads() {
       <td style="font-weight:500">${p.name}</td><td>${p.age}</td><td>${iconBadge(p)}</td>
       <td>${roleBadge(p.role)}</td><td style="font-weight:600;color:var(--accent)">${fmt(p.soldPrice)}</td></tr>`).join('')}
     </tbody></table></div>`;
-}
-
+};
 function renderSold() {
   const tb=document.getElementById('soldTable'); if(!tb)return;
   const s=getSold();
@@ -722,6 +764,30 @@ function renderAuction() {
     return;
   }
 
+  // Max bid calculator
+  const calcHtml=`<div class="card" style="margin-bottom:1rem;border:1px solid rgba(59,130,246,0.2);background:rgba(59,130,246,0.04)">
+    <div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:12px">💰 Max Bid Calculator</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:10px">How much can a team bid on this player and still afford to fill their squad with base-price players?</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">
+      ${teams.map(t=>{
+        const spent=teamSpent(t.id);
+        const rem=teamRem(t);
+        const playersHave=players.filter(p=>p.team===t.id).length;
+        const slotsLeft=Math.max(0,7-playersHave-1); // -1 for current player being bid on
+        const reserveNeeded=slotsLeft*50000;
+        const maxCanBid=Math.max(0,rem-reserveNeeded);
+        const cappedMax=p?Math.min(maxCanBid,effMax(p)):maxCanBid;
+        const canAffordBase=p?rem>=effBase(p):false;
+        return `<div style="padding:8px 10px;border-radius:var(--radius);background:var(--surface2);border:1px solid ${cappedMax>0&&canAffordBase?'rgba(34,197,94,0.2)':'rgba(239,68,68,0.15)'}">
+          <div style="font-size:12px;font-weight:600;margin-bottom:3px">${t.name}</div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:2px">Has ${playersHave} players · ${slotsLeft} slots left</div>
+          <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Reserve needed: ${fmt(reserveNeeded)}</div>
+          <div style="font-size:14px;font-weight:700;color:${cappedMax>0&&canAffordBase?'var(--green)':'var(--red)'}">Max: ${fmt(cappedMax)}</div>
+        </div>`;
+      }).join('')}
+    </div>
+  </div>`;
+
   const drawHtml=`<div class="draw-box">
     <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:1rem;letter-spacing:.5px;text-transform:uppercase">Draw a Player ID</div>
     <div style="display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap">
@@ -734,7 +800,7 @@ function renderAuction() {
   if(!p){div.innerHTML=drawHtml+gridHtml;return}
 
   const maxBid=effMax(p);
-  div.innerHTML=`${drawHtml}
+  div.innerHTML=`${drawHtml}${calcHtml}
     <div style="background:var(--surface2);border-radius:var(--radius-lg);padding:1rem 1.25rem;margin-bottom:1rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;border:1px solid var(--border)">
       <div style="font-size:28px;font-weight:700;color:var(--muted);font-family:'Bebas Neue',sans-serif">#${p.id}</div>
       <div style="flex:1;min-width:150px">
@@ -987,12 +1053,69 @@ window.showMsg = (text,type) => {
   const el=document.getElementById('msgBanner');el.className='msg msg-'+(type==='err'?'err':'ok');
   el.textContent=text;el.style.display='block';setTimeout(()=>el.style.display='none',3500);
 };
+window.calcMaxBid = () => {
+  const tid = parseInt(document.getElementById('calcTeam').value)||0;
+  const isIcon = document.getElementById('calcIsIcon').checked;
+  const res = document.getElementById('calcResult');
+  const dispEl = document.getElementById('calcPlayersLeftDisplay');
+  if(!tid){res.style.display='none';if(dispEl)dispEl.textContent='—';return}
+  const t = teams.find(x=>x.id===tid); if(!t){res.style.display='none';return}
+
+  // Auto-calculate: 7 players per team, minus how many they already have
+  const alreadyHave = players.filter(p=>p.team===t.id).length;
+  const playersLeft = 7 - alreadyHave; // how many still needed INCLUDING current bid
+  if(dispEl) dispEl.textContent = playersLeft <= 0 ? 'Squad Full!' : `${playersLeft} player${playersLeft>1?'s':''}`;
+
+  if(playersLeft <= 0){
+    res.style.display='block';
+    document.getElementById('calcRemBudget').textContent = fmt(teamRem(t));
+    document.getElementById('calcReserve').textContent = '₹0';
+    document.getElementById('calcMaxBidVal').textContent = 'Squad Full!';
+    document.getElementById('calcMaxBidVal').style.color = 'var(--green)';
+    document.getElementById('calcNote').textContent = '✅ This team has completed their squad of 7 players.';
+    return;
+  }
+
+  const rem = teamRem(t);
+  // Reserve ₹50,000 base for each player AFTER this one
+  const reserve = (playersLeft - 1) * rules.normalBase;
+  const maxSafeBid = rem - reserve;
+  // Icon players cap at ₹5L, normal players cap at ₹3L
+  const capLimit = isIcon ? rules.maxIcon : rules.maxNormal;
+  const capped = Math.min(maxSafeBid, capLimit);
+
+  res.style.display = 'block';
+  document.getElementById('calcRemBudget').textContent = fmt(rem);
+  document.getElementById('calcReserve').textContent = fmt(Math.max(0, reserve));
+  document.getElementById('calcMaxBidVal').textContent = capped > 0 ? fmt(capped) : '₹0 (Budget too low!)';
+  document.getElementById('calcMaxBidVal').style.color = capped <= 0 ? 'var(--red)' : 'var(--accent)';
+  const capLabel = isIcon ? '₹5L icon cap' : '₹3L normal cap';
+  const note = capped <= 0
+    ? `⚠️ Cannot afford! Budget ₹${(rem/100000).toFixed(1)}L with ${playersLeft-1} more player(s) still needed.`
+    : capped >= capLimit
+    ? `✅ Capped at ${fmt(capLimit)} (${capLabel}). ${fmt(reserve)} reserved for ${playersLeft-1} more player(s). Team has ${alreadyHave}/7 players.`
+    : `✅ Max safe bid: ${fmt(capped)}. ${fmt(reserve)} reserved for ${playersLeft-1} more player(s) at ₹50K each. Team has ${alreadyHave}/7 players.`;
+  document.getElementById('calcNote').textContent = note;
+};
+
+window.populateCalcTeams = () => {
+  const sel = document.getElementById('calcTeam'); if(!sel)return;
+  const prev = sel.value;
+  sel.innerHTML = '<option value="">Select team...</option>' + teams.map(t=>{
+    const have = players.filter(p=>p.team===t.id).length;
+    const need = 7 - have;
+    return `<option value="${t.id}">${t.name} — ${have}/7 players — ${fmt(teamRem(t))} left</option>`;
+  }).join('');
+  if(prev) sel.value = prev;
+  if(prev) calcMaxBid(); // refresh result when data updates
+};
+
 window.showPage = (name,btn) => {
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
   document.getElementById('page-'+name).classList.add('active');
   if(btn)btn.classList.add('active');
-  if(name==='auction')renderAuction();
+  if(name==='auction'){renderAuction();window.populateCalcTeams();}
   if(name==='squads')renderSquads();
 };
 window.sqTab = 0;
