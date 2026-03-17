@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Siddhachal Box Cricket 🏏</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0f1e;
+  --surface:#111827;
+  --surface2:#1a2235;
+  --border:rgba(255,255,255,0.07);
+  --border2:rgba(255,255,255,0.12);
+  --accent:#3b82f6;
+  --gold:#f59e0b;
+  --green:#22c55e;
+  --red:#ef4444;
+  --text:#f1f5f9;
+  --muted:#64748b;
+  --radius:10px;
+  --radius-lg:14px;
+}
+body{background:var(--bg);font-family:'DM Sans',sans-serif;color:var(--text);min-height:100vh}
+.bg-grid{position:fixed;inset:0;z-index:0;background-image:linear-gradient(rgba(59,130,246,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(59,130,246,0.025) 1px,transparent 1px);background-size:40px 40px;pointer-events:none}
+
+/* TOPBAR */
+.topbar{position:sticky;top:0;z-index:100;background:rgba(10,15,30,0.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0.6rem 1.25rem;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.topbar-brand{display:flex;align-items:center;gap:10px}
+.topbar-brand span{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:2px;color:var(--text)}
+.topbar-brand sub{font-size:10px;font-family:'DM Sans',sans-serif;color:var(--muted);letter-spacing:2px;text-transform:uppercase;font-weight:400}
+.topbar-right{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.viewer-badge{padding:3px 10px;border-radius:20px;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);color:var(--gold);font-size:11px;letter-spacing:1px;text-transform:uppercase}
+.admin-badge{padding:3px 10px;border-radius:20px;background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.3);color:var(--accent);font-size:11px;letter-spacing:1px;text-transform:uppercase}
+
+/* NAV */
+.nav{display:flex;gap:4px;padding:0.75rem 1.25rem;border-bottom:1px solid var(--border);overflow-x:auto;scrollbar-width:none;background:rgba(10,15,30,0.6);backdrop-filter:blur(8px);position:sticky;top:53px;z-index:99}
+.nav::-webkit-scrollbar{display:none}
+.nav button{padding:5px 14px;border-radius:var(--radius);border:1px solid transparent;background:transparent;cursor:pointer;font-size:12px;font-family:'DM Sans',sans-serif;color:var(--muted);transition:all .15s;white-space:nowrap;font-weight:500}
+.nav button.active{background:rgba(59,130,246,0.15);color:var(--accent);border-color:rgba(59,130,246,0.3)}
+.nav button:hover:not(.active){background:rgba(255,255,255,0.05);color:var(--text)}
+
+/* CONTENT */
+.app{max-width:1100px;margin:0 auto;padding:1.5rem 1.25rem 4rem;position:relative;z-index:1}
+.page{display:none}.page.active{display:block}
+
+/* BADGES */
+.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:500}
+.b-blue{background:rgba(59,130,246,0.15);color:#93c5fd;border:1px solid rgba(59,130,246,0.25)}
+.b-green{background:rgba(34,197,94,0.12);color:#86efac;border:1px solid rgba(34,197,94,0.2)}
+.b-amber{background:rgba(245,158,11,0.12);color:#fcd34d;border:1px solid rgba(245,158,11,0.2)}
+.b-gold{background:rgba(245,158,11,0.15);color:var(--gold);border:1px solid rgba(245,158,11,0.3)}
+
+/* CARDS */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.1rem 1.25rem}
+.mc{background:var(--surface2);border-radius:var(--radius);padding:1rem;text-align:center;border:1px solid var(--border)}
+.mc-l{font-size:11px;color:var(--muted);margin-bottom:4px;letter-spacing:1px;text-transform:uppercase;font-weight:500}
+.mc-v{font-size:22px;font-weight:600;color:var(--text)}
+.g4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:1.5rem}
+.g2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:1rem}
+@media(max-width:700px){.g4{grid-template-columns:repeat(2,1fr)}.g2{grid-template-columns:1fr}}
+
+/* TABLE */
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;padding:8px 10px;border-bottom:1px solid var(--border);color:var(--muted);font-weight:500;font-size:11px;text-transform:uppercase;letter-spacing:.5px}
+td{padding:8px 10px;border-bottom:1px solid var(--border);color:var(--text)}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(255,255,255,0.02)}
+
+/* BUTTONS */
+.btn{padding:6px 13px;border-radius:var(--radius);border:1px solid var(--border2);background:transparent;cursor:pointer;font-size:12px;font-family:'DM Sans',sans-serif;color:var(--text);transition:all .15s;white-space:nowrap;font-weight:500}
+.btn:hover{background:rgba(255,255,255,0.07)}
+.btn:disabled{opacity:.35;cursor:not-allowed}
+.btn-p{background:var(--accent);border-color:var(--accent);color:#fff}.btn-p:hover{background:#2563eb;border-color:#2563eb}
+.btn-d{background:rgba(239,68,68,0.12);color:#fca5a5;border-color:rgba(239,68,68,0.3)}
+.btn-d:hover{background:rgba(239,68,68,0.2)}
+.btn-s{background:rgba(34,197,94,0.12);color:#86efac;border-color:rgba(34,197,94,0.25)}
+.btn-s:hover{background:rgba(34,197,94,0.2)}
+.btn-gold{background:rgba(245,158,11,0.12);color:var(--gold);border-color:rgba(245,158,11,0.3)}
+.btn-gold:hover{background:rgba(245,158,11,0.2)}
+
+/* FILTER BAR */
+.fbar{display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap;align-items:center}
+.fbar input,.fbar select{padding:6px 10px;border:1px solid var(--border2);border-radius:var(--radius);font-size:12px;background:var(--surface);color:var(--text);font-family:'DM Sans',sans-serif;max-width:180px}
+.fbar select option{background:#1a2235}
+
+/* MSG */
+.msg{padding:10px 14px;border-radius:var(--radius);font-size:13px;margin-bottom:1rem;display:none}
+.msg-ok{background:rgba(34,197,94,0.1);color:#86efac;border:1px solid rgba(34,197,94,0.2)}
+.msg-err{background:rgba(239,68,68,0.1);color:#fca5a5;border:1px solid rgba(239,68,68,0.2)}
+
+/* MODAL */
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:999;display:none;align-items:flex-start;justify-content:center;padding:40px 16px;overflow-y:auto;backdrop-filter:blur(4px)}
+.ov.open{display:flex}
+.modal{background:var(--surface);border-radius:var(--radius-lg);padding:1.5rem;width:100%;max-width:440px;border:1px solid var(--border2);position:relative;margin:auto}
+.modal h3{font-size:15px;font-weight:600;margin-bottom:1.2rem;padding-right:2rem;color:var(--text)}
+.cx{position:absolute;top:1rem;right:1rem;cursor:pointer;font-size:18px;color:var(--muted);background:none;border:none;line-height:1;padding:2px 6px;transition:color .15s}
+.cx:hover{color:var(--text)}
+.fr{margin-bottom:14px}
+.fr label{font-size:11px;color:var(--muted);display:block;margin-bottom:5px;font-weight:500;letter-spacing:.5px;text-transform:uppercase}
+.fr input,.fr select{padding:8px 12px;border:1px solid var(--border2);border-radius:var(--radius);font-size:13px;background:rgba(255,255,255,0.04);color:var(--text);width:100%;display:block;font-family:'DM Sans',sans-serif}
+.fr input:focus,.fr select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(59,130,246,0.12)}
+.fr select option{background:#1a2235}
+.mbtns{display:flex;gap:8px;margin-top:1.5rem}
+
+/* AUCTION */
+.acard{background:var(--surface2);border-radius:var(--radius-lg);padding:1.5rem;text-align:center;margin-bottom:1rem;border:1px solid var(--border)}
+.pname{font-size:26px;font-weight:600;color:var(--text);margin-bottom:4px;line-height:1.2;font-family:'Bebas Neue',sans-serif;letter-spacing:1px}
+.pmeta{font-size:13px;color:var(--muted)}
+.cbid{font-size:42px;font-weight:700;color:var(--accent);margin:.75rem 0 .25rem;font-family:'Bebas Neue',sans-serif;letter-spacing:2px}
+.bidrow{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:.75rem}
+.tpill{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:var(--radius);background:var(--surface2);border:1px solid var(--border);font-size:12px;cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif}
+.tpill:hover{border-color:var(--border2)}
+.tpill.sel{background:rgba(59,130,246,0.15);color:var(--accent);border-color:rgba(59,130,246,0.4)}
+.tpill.noaff{opacity:.3;cursor:not-allowed;pointer-events:none}
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem}
+.tcard{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:1.1rem;transition:border-color .15s}
+.tcard:hover{border-color:var(--border2)}
+.tabtab{display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap}
+.tt{padding:5px 14px;border-radius:var(--radius);font-size:12px;cursor:pointer;border:1px solid var(--border);color:var(--muted);font-family:'DM Sans',sans-serif;transition:all .15s}
+.tt.active{background:rgba(255,255,255,0.07);color:var(--text);border-color:var(--border2)}
+
+/* DRAW BOX */
+.draw-box{background:var(--surface2);border:1px dashed rgba(59,130,246,0.3);border-radius:var(--radius-lg);padding:1.5rem;text-align:center;margin-bottom:1rem}
+.draw-input{font-size:44px;font-weight:700;text-align:center;border:2px solid var(--border2);border-radius:var(--radius-lg);padding:.5rem;width:130px;color:var(--accent);background:var(--surface);font-family:'Bebas Neue',sans-serif}
+.draw-input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(59,130,246,0.12)}
+
+/* PLAYER ID GRID */
+.pid-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(48px,1fr));gap:5px;margin-top:.75rem}
+.pid-cell{padding:5px 2px;text-align:center;font-size:11px;border-radius:8px;border:1px solid var(--border);color:var(--muted)}
+.pid-sold{background:rgba(34,197,94,0.1);color:#86efac;border-color:rgba(34,197,94,0.25)}
+.pid-active{background:var(--accent);color:#fff;font-weight:600;border-color:var(--accent)}
+.pid-skip{background:rgba(239,68,68,0.08);color:#fca5a5;border-color:rgba(239,68,68,0.2)}
+
+/* SPOTLIGHT */
+#spotlight{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.88);backdrop-filter:blur(8px)}
+#spotlight.on{display:flex}
+.sp-card{border-radius:24px;padding:2.5rem 3rem;text-align:center;max-width:520px;width:92%;animation:spP .4s cubic-bezier(.34,1.56,.64,1);position:relative;background:linear-gradient(145deg,#0d1b4b,#1a2f7a);border:1px solid rgba(59,130,246,0.4)}
+.sp-card.icon-card{background:linear-gradient(145deg,#2d1c00,#5c3b00);border-color:rgba(245,158,11,0.5)}
+@keyframes spP{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}
+.sp-lbl{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#8fa8e8;margin-bottom:1rem}
+.sp-lbl-icon{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:1rem}
+.sp-name{font-size:32px;font-weight:700;color:#fff;margin-bottom:.4rem;line-height:1.2;font-family:'Bebas Neue',sans-serif;letter-spacing:1px}
+.sp-sub{font-size:13px;color:#8fa8e8;margin-bottom:1.2rem}
+.sp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin-bottom:1.5rem}
+.sp-stat{background:rgba(255,255,255,.07);border-radius:10px;padding:.65rem}
+.sp-sl{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:#8fa8e8;margin-bottom:3px}
+.sp-sv{font-size:17px;font-weight:600;color:#fff}
+.sp-cx{position:absolute;top:1rem;right:1rem;color:rgba(255,255,255,.4);cursor:pointer;font-size:22px;background:none;border:none;line-height:1}
+.sp-badge{display:inline-block;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:600;margin-bottom:1rem}
+.sp-bat{background:rgba(59,130,246,.25);color:#93c5fd}
+.sp-bowl{background:rgba(245,158,11,.25);color:#fcd34d}
+.sp-all{background:rgba(34,197,94,.25);color:#86efac}
+.sp-icon-b{background:rgba(245,158,11,.2);color:var(--gold);border:1px solid rgba(245,158,11,.4)}
+
+/* LIVE VIEW */
+#liveView{position:fixed;inset:0;z-index:9998;display:none;background:var(--bg);overflow-y:auto;padding:2rem}
+#liveView.on{display:block}
+.lv-inner{max-width:680px;margin:0 auto;text-align:center}
+.lv-dot{width:8px;height:8px;border-radius:50%;background:#ef4444;animation:pulse 1s infinite;display:inline-block}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.lv-name{font-size:38px;font-weight:700;color:var(--text);line-height:1.2;margin-bottom:.5rem;font-family:'Bebas Neue',sans-serif;letter-spacing:1px}
+.lv-bid{font-size:58px;font-weight:700;color:var(--accent);margin-bottom:.25rem;font-family:'Bebas Neue',sans-serif;letter-spacing:2px}
+.lv-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:2rem}
+
+/* TOPUP ROW */
+.topup-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)}
+.rule-box{background:var(--surface2);border-radius:var(--radius);padding:1rem;border-left:3px solid var(--accent)}
+
+/* VIEWER LOCK OVERLAY */
+.viewer-lock{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);z-index:200;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);border-radius:30px;padding:8px 20px;font-size:12px;color:var(--gold);display:flex;align-items:center;gap:8px;backdrop-filter:blur(8px);white-space:nowrap}
+
+/* LOADING */
+.loading-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column;gap:1rem}
+.loading-screen .spinner{width:32px;height:32px;border:3px solid rgba(59,130,246,0.2);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-screen p{font-size:13px;color:var(--muted);letter-spacing:1px}
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+
+<!-- Loading screen -->
+<div class="loading-screen" id="loadingScreen">
+  <div style="font-size:2.5rem;margin-bottom:0.5rem">🏏</div>
+  <div class="spinner"></div>
+  <p>Loading auction data...</p>
+</div>
+
+<!-- Main app (hidden until loaded) -->
+<div id="mainApp" style="display:none">
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-brand">
+    <span>🏏 Siddhachal Box Cricket</span>
+    <sub>Auction</sub>
+  </div>
+  <div class="topbar-right">
+    <span id="roleBadge" class="viewer-badge">👀 Viewer</span>
+    <button class="btn" onclick="openLiveView()" style="display:flex;align-items:center;gap:5px"><span class="lv-dot"></span> Live</button>
+    <button class="btn" onclick="exportData()" id="exportBtn">Export</button>
+    <button class="btn btn-d" id="resetBtn" onclick="if(confirm('Reset ALL data?'))hardReset()" style="display:none">Reset</button>
+    <button class="btn" id="logoutBtn" onclick="doLogout()" style="display:none">Logout</button>
+    <a href="login.html" class="btn" id="loginLink">Admin Login</a>
+  </div>
+</div>
+
+<!-- NAV -->
+<div class="nav">
+  <button class="active" onclick="showPage('dashboard',this)">Dashboard</button>
+  <button onclick="showPage('auction',this)" id="auctionNavBtn">Live Auction</button>
+  <button onclick="showPage('players',this)">Players</button>
+  <button onclick="showPage('teams',this)">Teams</button>
+  <button onclick="showPage('squads',this)">Squads</button>
+  <button onclick="showPage('sold',this)">Sold</button>
+  <button onclick="showPage('rules',this)">Rules</button>
+</div>
+
+<div class="app">
+  <div id="msgBanner" class="msg"></div>
+
+  <!-- DASHBOARD -->
+  <div id="page-dashboard" class="page active">
+    <div class="g4" id="dashMetrics"></div>
+    <div class="g2">
+      <div class="card"><div style="font-size:14px;font-weight:600;margin-bottom:12px;color:var(--text)">Players by Role</div><div id="roleBreakdown"></div></div>
+      <div class="card"><div style="font-size:14px;font-weight:600;margin-bottom:12px;color:var(--text)">Team Budgets</div><div id="teamsBudget"></div></div>
+    </div>
+  </div>
+
+  <!-- AUCTION -->
+  <div id="page-auction" class="page"><div id="auctionContent"></div></div>
+
+  <!-- PLAYERS -->
+  <div id="page-players" class="page">
+    <div class="fbar">
+      <input type="text" id="searchPlayer" placeholder="Search player..." oninput="renderPlayers()">
+      <select id="filterRole" onchange="renderPlayers()"><option value="">All Roles</option><option>Batsmen</option><option>Bowler</option><option>All-rounder</option></select>
+      <select id="filterStatus" onchange="renderPlayers()"><option value="">All Status</option><option value="unsold">Unsold</option><option value="sold">Sold</option></select>
+      <select id="filterIcon" onchange="renderPlayers()"><option value="">All Players</option><option value="icon">Icon Only</option><option value="normal">Normal Only</option></select>
+      <button class="btn btn-p" style="margin-left:auto" onclick="openAddPlayer()" id="addPlayerBtn" style="display:none">+ Add Player</button>
+    </div>
+    <div class="card" style="overflow-x:auto"><table>
+      <thead><tr><th style="width:36px">ID</th><th>Name</th><th>Age</th><th>Role</th><th>Icon</th><th>Base</th><th>Status</th><th>Sold</th><th>Team</th><th id="actionsHeader">Actions</th></tr></thead>
+      <tbody id="playersTable"></tbody>
+    </table></div>
+  </div>
+
+  <!-- TEAMS -->
+  <div id="page-teams" class="page">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:8px">
+      <div style="font-size:16px;font-weight:600">Teams</div>
+      <div id="teamsAdminBtns" style="display:flex;gap:8px;display:none">
+        <button class="btn btn-gold" onclick="openTopup()">Top-up Budget</button>
+        <button class="btn btn-p" onclick="openAddTeam()">+ Add Team</button>
+      </div>
+    </div>
+    <div class="tgrid" id="teamsGrid"></div>
+  </div>
+
+  <!-- SQUADS -->
+  <div id="page-squads" class="page">
+    <div class="tabtab" id="squadTabs"></div>
+    <div id="squadContent"></div>
+  </div>
+
+  <!-- SOLD -->
+  <div id="page-sold" class="page">
+    <div class="card" style="overflow-x:auto"><table>
+      <thead><tr><th>ID</th><th>Name</th><th>Icon</th><th>Role</th><th>Base</th><th>Sold</th><th>Team</th></tr></thead>
+      <tbody id="soldTable"></tbody>
+    </table></div>
+  </div>
+
+  <!-- RULES -->
+  <div id="page-rules" class="page">
+    <div style="font-size:16px;font-weight:600;margin-bottom:1.2rem">Auction Rules</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:1rem;margin-bottom:1.5rem">
+      <div class="rule-box"><div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Normal Base</div><div style="font-size:15px;font-weight:600" id="r-normal">₹50,000</div></div>
+      <div class="rule-box" style="border-left-color:var(--gold)"><div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">⭐ Icon Base</div><div style="font-size:15px;font-weight:600" id="r-icon">₹2,00,000</div></div>
+      <div class="rule-box" style="border-left-color:var(--green)"><div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Starting Budget</div><div style="font-size:15px;font-weight:600" id="r-budget">₹5,00,000</div></div>
+      <div class="rule-box" style="border-left-color:#f97316"><div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Max Bid (Normal)</div><div style="font-size:15px;font-weight:600" id="r-maxnormal">₹3,00,000</div></div>
+      <div class="rule-box" style="border-left-color:var(--red)"><div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Max Bid (Icon)</div><div style="font-size:15px;font-weight:600" id="r-maxicon">₹6,00,000</div></div>
+      <div class="rule-box" style="border-left-color:#a855f7"><div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Top-up (once)</div><div style="font-size:15px;font-weight:600" id="r-topup">₹1,00,000</div></div>
+    </div>
+    <div class="card" style="margin-bottom:1rem" id="editRulesCard">
+      <div style="font-size:13px;font-weight:600;margin-bottom:12px">Edit Rules</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px">
+        <div><label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Normal Base (₹)</label><input id="ru-normal" type="number" value="50000" style="padding:7px 10px;border:1px solid var(--border2);border-radius:var(--radius);font-size:13px;background:rgba(255,255,255,.04);color:var(--text);width:100%;font-family:'DM Sans',sans-serif"></div>
+        <div><label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Icon Base (₹)</label><input id="ru-icon" type="number" value="200000" style="padding:7px 10px;border:1px solid var(--border2);border-radius:var(--radius);font-size:13px;background:rgba(255,255,255,.04);color:var(--text);width:100%;font-family:'DM Sans',sans-serif"></div>
+        <div><label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Starting Budget (₹)</label><input id="ru-budget" type="number" value="500000" style="padding:7px 10px;border:1px solid var(--border2);border-radius:var(--radius);font-size:13px;background:rgba(255,255,255,.04);color:var(--text);width:100%;font-family:'DM Sans',sans-serif"></div>
+        <div><label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Max Bid Normal (₹)</label><input id="ru-maxnormal" type="number" value="300000" style="padding:7px 10px;border:1px solid var(--border2);border-radius:var(--radius);font-size:13px;background:rgba(255,255,255,.04);color:var(--text);width:100%;font-family:'DM Sans',sans-serif"></div>
+        <div><label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Max Bid Icon (₹)</label><input id="ru-maxicon" type="number" value="600000" style="padding:7px 10px;border:1px solid var(--border2);border-radius:var(--radius);font-size:13px;background:rgba(255,255,255,.04);color:var(--text);width:100%;font-family:'DM Sans',sans-serif"></div>
+        <div><label style="font-size:11px;color:var(--muted);display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">Top-up Amount (₹)</label><input id="ru-topup" type="number" value="100000" style="padding:7px 10px;border:1px solid var(--border2);border-radius:var(--radius);font-size:13px;background:rgba(255,255,255,.04);color:var(--text);width:100%;font-family:'DM Sans',sans-serif"></div>
+      </div>
+      <button class="btn btn-p" style="margin-top:1rem" onclick="saveRules()">Save Rules</button>
+    </div>
+    <div class="card">
+      <div style="font-size:13px;font-weight:600;margin-bottom:10px">General Rules</div>
+      <div style="font-size:13px;color:var(--muted);line-height:2">
+        • Auctioneer draws any player ID — that player is immediately put up for auction.<br>
+        • Icon players (⭐) have a higher base price and max bid cap.<br>
+        • Each team gets <strong style="color:var(--text)">exactly one</strong> top-up of ₹1,00,000 for the entire auction.<br>
+        • A team cannot bid if the amount exceeds their remaining budget.<br>
+        • Bids are capped at the max bid limit for the player type.<br>
+        • Sold players can only be re-auctioned by unselling them manually.
+      </div>
+    </div>
+  </div>
+</div><!-- /app -->
+
+<!-- Viewer badge pill -->
+<div class="viewer-lock" id="viewerLock" style="display:none">
+  🔒 Viewer Mode — <a href="login.html" style="color:var(--gold);text-decoration:none;font-weight:600">Login as Admin</a> to make changes
+  <span id="liveSyncBadge" style="opacity:0;transition:opacity 0.4s;background:rgba(34,197,94,0.2);border:1px solid rgba(34,197,94,0.4);color:#86efac;padding:2px 8px;border-radius:20px;font-size:10px;margin-left:4px;letter-spacing:1px">● LIVE UPDATE</span>
+</div>
+
+</div><!-- /mainApp -->
+
+<!-- SPOTLIGHT -->
+<div id="spotlight" onclick="closeSpotlight()">
+  <div id="sp-inner" class="sp-card" onclick="event.stopPropagation()">
+    <button class="sp-cx" onclick="closeSpotlight()">✕</button>
+    <div id="sp-lbl" class="sp-lbl">Now Up For Auction</div>
+    <div id="sp-name" class="sp-name"></div>
+    <div id="sp-sub" class="sp-sub"></div>
+    <div id="sp-badges" style="margin-bottom:1rem"></div>
+    <div class="sp-grid">
+      <div class="sp-stat"><div class="sp-sl">Age</div><div id="sp-age" class="sp-sv"></div></div>
+      <div class="sp-stat"><div class="sp-sl">Role</div><div id="sp-role" class="sp-sv" style="font-size:13px;padding-top:3px"></div></div>
+      <div class="sp-stat"><div class="sp-sl">Base Price</div><div id="sp-price" class="sp-sv" style="font-size:14px"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- LIVE VIEW -->
+<div id="liveView">
+  <button onclick="closeLiveView()" style="position:fixed;top:1rem;right:1rem;z-index:1;padding:6px 14px;border-radius:var(--radius);border:1px solid var(--border2);background:var(--surface);cursor:pointer;font-size:12px;color:var(--text);font-family:'DM Sans',sans-serif">✕ Close</button>
+  <div class="lv-inner">
+    <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;display:flex;align-items:center;justify-content:center;gap:6px"><span class="lv-dot"></span>Live Auction — Siddhachal Box Cricket</div>
+    <div id="lvContent"></div>
+    <div class="lv-stats" id="lvStats"></div>
+  </div>
+</div>
+
+<!-- ADD/EDIT PLAYER -->
+<div class="ov" id="addPlayerModal" onclick="maybeClose('addPlayerModal',event)">
+  <div class="modal">
+    <button class="cx" onclick="closeModal('addPlayerModal')">✕</button>
+    <h3 id="playerModalTitle">Add Player</h3>
+    <div class="fr"><label>Full Name *</label><input id="pName" placeholder="Enter full name"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div class="fr"><label>Age</label><input id="pAge" type="number" placeholder="Age"></div>
+      <div class="fr"><label>Role</label><select id="pRole"><option>Batsmen</option><option>Bowler</option><option>All-rounder</option></select></div>
+    </div>
+    <div class="fr"><label>Custom Base Price (₹) — 0 = rule default</label><input id="pBase" type="number" value="0"></div>
+    <div class="fr" style="display:flex;align-items:center;gap:10px;background:rgba(245,158,11,0.06);padding:10px 12px;border-radius:var(--radius);border:1px solid rgba(245,158,11,0.15)">
+      <input type="checkbox" id="pIcon" style="width:16px;height:16px;cursor:pointer;accent-color:var(--gold)">
+      <label for="pIcon" style="font-size:13px;font-weight:500;color:var(--text);cursor:pointer;margin:0">⭐ Icon Player (base: ₹2,00,000)</label>
+    </div>
+    <input type="hidden" id="pEditId">
+    <div class="mbtns"><button class="btn btn-p" onclick="savePlayer()">Save Player</button><button class="btn" onclick="closeModal('addPlayerModal')">Cancel</button></div>
+  </div>
+</div>
+
+<!-- ADD/EDIT TEAM -->
+<div class="ov" id="addTeamModal" onclick="maybeClose('addTeamModal',event)">
+  <div class="modal">
+    <button class="cx" onclick="closeModal('addTeamModal')">✕</button>
+    <h3 id="teamModalTitle">Add Team</h3>
+    <div class="fr"><label>Team Name *</label><input id="tName" placeholder="e.g. RB Challengers"></div>
+    <div class="fr"><label>Owner / Captain</label><input id="tOwner" placeholder="Owner name"></div>
+    <div class="fr"><label>Starting Budget (₹)</label><input id="tBudget" type="number" value="500000"></div>
+    <input type="hidden" id="tEditId">
+    <div class="mbtns"><button class="btn btn-p" onclick="saveTeam()">Save Team</button><button class="btn" onclick="closeModal('addTeamModal')">Cancel</button></div>
+  </div>
+</div>
+
+<!-- TOP-UP -->
+<div class="ov" id="topupModal" onclick="maybeClose('topupModal',event)">
+  <div class="modal">
+    <button class="cx" onclick="closeModal('topupModal')">✕</button>
+    <h3>Budget Top-up</h3>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:1.2rem">Each team can use their top-up <strong style="color:var(--text)">exactly once</strong>.</p>
+    <div id="topupList"></div>
+    <div class="mbtns"><button class="btn" onclick="closeModal('topupModal')">Close</button></div>
+  </div>
+</div>
+
+<!-- QUICK SELL -->
+<div class="ov" id="sellModal" onclick="maybeClose('sellModal',event)">
+  <div class="modal">
+    <button class="cx" onclick="closeModal('sellModal')">✕</button>
+    <h3 id="sellModalTitle">Sell Player</h3>
+    <div id="sellModalBody"></div>
+  </div>
+</div>
+
+<!-- Firebase + App Logic -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import {
+  getFirestore, doc, setDoc, onSnapshot
+} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { firebaseConfig } from "./firebase-config.js";
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// ─── DEFAULTS ───────────────────────────────────────────
+const DEFAULT_RULES = {normalBase:50000,iconBase:200000,startBudget:500000,maxNormal:300000,maxIcon:600000,topupAmt:100000};
+const DEFAULT_TEAMS = [
+  {id:1,name:"RB Challengers",owner:"",budget:500000,topupUsed:false},
+  {id:2,name:"Mishty Mavericks",owner:"",budget:500000,topupUsed:false},
+  {id:3,name:"Ca Ashish",owner:"",budget:500000,topupUsed:false},
+  {id:4,name:"Bafna Warriors",owner:"",budget:500000,topupUsed:false},
+  {id:5,name:"Siddhachal Dhurandars",owner:"",budget:500000,topupUsed:false},
+  {id:6,name:"Gadiya Strikers",owner:"",budget:500000,topupUsed:false},
+  {id:7,name:"Siddhachal Warriors",owner:"",budget:500000,topupUsed:false}
+];
+const PLAYER_NAMES=["Vipul Pradeep Oswal","Daksh Oswal","Shouraya Rajeev Banthiya","Rajeev Banthiya","Goutam Parmar","Manish Jain","Prasad Katariya","Jai Chawla","Rishil Jain","Harshal Bafna","Sagar Raval","Vishal Ravindra Nangare","Piyush Thakkar","Shreyansh Jain","Siddharth Jain","Devansh Parekh","Akshay Ashok Oswal","Pratik Mehta","Karan Rathod","Siddhant Rohit Gadiya","Saurabh Suresh Mehta","Shreepal Jain","Rahul Jain","Nirav Oswal","Amol Ajit Kucheriya","Ashish S Mehta","Moksh Jain","Samyak Oswal","Ansh Paresh Bafna","Paresh Bafna","Panav Siroya","Khush Prashant Jain","Kavish Siroya","Sayyam Jain","Aarush Shah","Prashant Motilal Jain","Tanish Oswal","Dhwaj Nilesh Bhandari","Ankit","Yug Mehta","Mukesh Bafna","Tanay Banthiya","Hitesh Khivsara","Dungarmal","Mahesh Bhutada","Vishal M Siroya","Nihal","Nitesh Bafna","Hitesh Bafna","Kavish Oswal","Dweep Porwal"];
+const PLAYER_AGES=[37,15,16,45,34,41,35,35,16,28,20,28,45,35,35,15,29,30,16,15,36,26,42,16,45,45,22,17,14,42,17,19,20,23,14,46,21,15,40,20,40,21,37,40,43,49,31,35,35,15,17];
+const PLAYER_ROLES=["All-rounder","Batsmen","All-rounder","All-rounder","All-rounder","Bowler","All-rounder","All-rounder","All-rounder","Batsmen","Bowler","Bowler","All-rounder","All-rounder","All-rounder","All-rounder","All-rounder","All-rounder","All-rounder","All-rounder","All-rounder","All-rounder","All-rounder","All-rounder","Bowler","All-rounder","Bowler","All-rounder","All-rounder","All-rounder","Bowler","All-rounder","All-rounder","All-rounder","All-rounder","All-rounder","All-rounder","All-rounder","All-rounder","Bowler","Bowler","All-rounder","All-rounder","All-rounder","All-rounder","Bowler","All-rounder","All-rounder","All-rounder","Bowler","All-rounder"];
+
+function makeDefaultPlayers(){return PLAYER_NAMES.map((name,i)=>({id:i+1,name,age:PLAYER_AGES[i],role:PLAYER_ROLES[i],icon:false,basePrice:0,soldPrice:null,team:null}))}
+
+// ─── STATE ───────────────────────────────────────────────
+let players = makeDefaultPlayers();
+let teams = JSON.parse(JSON.stringify(DEFAULT_TEAMS));
+let rules = {...DEFAULT_RULES};
+let auctionState = {currentId:null,bid:0,sel:null,drawn:[]};
+let sqTab = 0;
+let isAdmin = false;
+
+// ─── HELPERS ─────────────────────────────────────────────
+const fmt = n => '₹'+Number(n).toLocaleString('en-IN');
+const effBase = p => p.basePrice>0 ? p.basePrice : (p.icon ? rules.iconBase : rules.normalBase);
+const effMax = p => p.icon ? rules.maxIcon : rules.maxNormal;
+const roleBadge = r => r==='Batsmen'?`<span class="badge b-blue">${r}</span>`:r==='Bowler'?`<span class="badge b-amber">${r}</span>`:`<span class="badge b-green">${r}</span>`;
+const iconBadge = p => p.icon?'<span class="badge b-gold">⭐</span>':'<span style="font-size:12px;color:var(--muted)">—</span>';
+const teamSpent = tid => players.filter(p=>p.team===tid).reduce((s,p)=>s+(p.soldPrice||0),0);
+const teamRem = t => t.budget - teamSpent(t.id);
+const getSold = () => players.filter(p=>p.team);
+const getUnsold = () => players.filter(p=>!p.team);
+
+// ─── FIRESTORE REAL-TIME LISTENER ────────────────────────
+// unsubscribe handle so we can detach if needed
+let _unsubSnapshot = null;
+
+function startRealtimeListener() {
+  // Detach any existing listener first
+  if (_unsubSnapshot) _unsubSnapshot();
+
+  _unsubSnapshot = onSnapshot(doc(db, 'auction', 'main'), (snap) => {
+    if (snap.exists()) {
+      const d = snap.data();
+      // For admin: don't overwrite local state mid-interaction
+      // (they're the source of truth). For viewers: always sync.
+      if (!isAdmin) {
+        if (d.players && d.players.length) players = d.players;
+        if (d.teams && d.teams.length) teams = d.teams;
+        if (d.rules) rules = {...DEFAULT_RULES, ...d.rules};
+        if (d.auctionState) auctionState = d.auctionState;
+        syncRuleInputs();
+        renderAll();
+        // Flash a subtle "updated" indicator for viewers
+        flashUpdateBadge();
+      } else {
+        // Admin: sync on first load only (snap.metadata.hasPendingWrites === false
+        // and we haven't done our first render yet is handled by the flag below)
+        if (!_initialLoadDone) {
+          if (d.players && d.players.length) players = d.players;
+          if (d.teams && d.teams.length) teams = d.teams;
+          if (d.rules) rules = {...DEFAULT_RULES, ...d.rules};
+          if (d.auctionState) auctionState = d.auctionState;
+          syncRuleInputs();
+          renderAll();
+          document.getElementById('loadingScreen').style.display = 'none';
+          document.getElementById('mainApp').style.display = 'block';
+          _initialLoadDone = true;
+        }
+      }
+    } else {
+      // First run — seed Firestore with defaults (admin only)
+      if (isAdmin) saveToFirestore();
+      document.getElementById('loadingScreen').style.display = 'none';
+      document.getElementById('mainApp').style.display = 'block';
+      _initialLoadDone = true;
+    }
+  }, (err) => {
+    console.error('Snapshot error', err);
+    document.getElementById('loadingScreen').style.display = 'none';
+    document.getElementById('mainApp').style.display = 'block';
+  });
+}
+
+let _initialLoadDone = false;
+
+function flashUpdateBadge() {
+  let badge = document.getElementById('liveSyncBadge');
+  if (!badge) return;
+  badge.style.opacity = '1';
+  clearTimeout(badge._t);
+  badge._t = setTimeout(() => badge.style.opacity = '0', 2000);
+}
+
+async function saveToFirestore() {
+  if (!isAdmin) return; // Only admin can write
+  try {
+    await setDoc(doc(db, 'auction', 'main'), {players, teams, rules, auctionState});
+  } catch(e) {
+    console.error('Firestore save error', e);
+    showMsg('Save failed — check connection.', 'err');
+  }
+}
+
+// ─── AUTH ─────────────────────────────────────────────────
+onAuthStateChanged(auth, (user) => {
+  isAdmin = !!user;
+  _initialLoadDone = false;
+  applyRole();
+  // Start (or restart) the real-time listener
+  startRealtimeListener();
+  // For viewers: show app immediately after auth resolves,
+  // the snapshot callback will populate data
+  if (!isAdmin) {
+    // Show app shell right away; snapshot will fill in data
+    setTimeout(() => {
+      document.getElementById('loadingScreen').style.display = 'none';
+      document.getElementById('mainApp').style.display = 'block';
+    }, 800); // small delay to let first snapshot arrive
+  }
+});
+
+function applyRole() {
+  const badge = document.getElementById('roleBadge');
+  const resetBtn = document.getElementById('resetBtn');
+  const logoutBtn = document.getElementById('logoutBtn');
+  const loginLink = document.getElementById('loginLink');
+  const viewerLock = document.getElementById('viewerLock');
+  const teamsAdminBtns = document.getElementById('teamsAdminBtns');
+  const editRulesCard = document.getElementById('editRulesCard');
+
+  if (isAdmin) {
+    badge.textContent = '⚡ Admin'; badge.className = 'admin-badge';
+    resetBtn.style.display = 'inline-flex';
+    logoutBtn.style.display = 'inline-flex';
+    loginLink.style.display = 'none';
+    viewerLock.style.display = 'none';
+    if(teamsAdminBtns) teamsAdminBtns.style.display = 'flex';
+    if(editRulesCard) editRulesCard.style.display = 'block';
+  } else {
+    badge.textContent = '👀 Viewer'; badge.className = 'viewer-badge';
+    resetBtn.style.display = 'none';
+    logoutBtn.style.display = 'none';
+    loginLink.style.display = 'inline-flex';
+    viewerLock.style.display = 'flex';
+    if(teamsAdminBtns) teamsAdminBtns.style.display = 'none';
+    if(editRulesCard) editRulesCard.style.display = 'none';
+  }
+}
+
+window.doLogout = async () => {
+  await signOut(auth);
+  window.location.href = 'login.html';
+};
+
+// ─── RENDER ALL ───────────────────────────────────────────
+window.renderAll = () => {
+  renderDash(); renderPlayers(); renderTeams(); renderSquads(); renderSold(); renderAuction(); renderLiveView(); renderRuleDisplay();
+};
+
+function renderRuleDisplay() {
+  const m={'r-normal':rules.normalBase,'r-icon':rules.iconBase,'r-budget':rules.startBudget,'r-maxnormal':rules.maxNormal,'r-maxicon':rules.maxIcon,'r-topup':rules.topupAmt};
+  Object.entries(m).forEach(([id,v])=>{const el=document.getElementById(id);if(el)el.textContent=fmt(v)});
+}
+
+function syncRuleInputs() {
+  [['ru-normal','normalBase'],['ru-icon','iconBase'],['ru-budget','startBudget'],['ru-maxnormal','maxNormal'],['ru-maxicon','maxIcon'],['ru-topup','topupAmt']].forEach(([id,k])=>{const el=document.getElementById(id);if(el)el.value=rules[k];});
+}
+
+window.saveRules = async () => {
+  if(!isAdmin){showMsg('Admin only','err');return}
+  rules.normalBase=parseInt(document.getElementById('ru-normal').value)||50000;
+  rules.iconBase=parseInt(document.getElementById('ru-icon').value)||200000;
+  rules.startBudget=parseInt(document.getElementById('ru-budget').value)||500000;
+  rules.maxNormal=parseInt(document.getElementById('ru-maxnormal').value)||300000;
+  rules.maxIcon=parseInt(document.getElementById('ru-maxicon').value)||600000;
+  rules.topupAmt=parseInt(document.getElementById('ru-topup').value)||100000;
+  await saveToFirestore(); showMsg('Rules saved!','ok'); renderAll();
+};
+
+function renderDash() {
+  const sold=getSold(),unsold=getUnsold(),iconC=players.filter(p=>p.icon).length;
+  const dm=document.getElementById('dashMetrics'); if(!dm)return;
+  dm.innerHTML=`<div class="mc"><div class="mc-l">Total Players</div><div class="mc-v">${players.length}</div></div>
+    <div class="mc"><div class="mc-l">Sold</div><div class="mc-v" style="color:var(--green)">${sold.length}</div></div>
+    <div class="mc"><div class="mc-l">Remaining</div><div class="mc-v" style="color:#f97316">${unsold.length}</div></div>
+    <div class="mc"><div class="mc-l">Icon Players</div><div class="mc-v" style="color:var(--gold)">⭐ ${iconC}</div></div>`;
+  const roles={};players.forEach(p=>{roles[p.role]=(roles[p.role]||0)+1});
+  const rb=document.getElementById('roleBreakdown');
+  if(rb)rb.innerHTML=Object.entries(roles).map(([r,c])=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">${roleBadge(r)}<span style="font-size:13px;color:var(--muted)">${c}</span></div>`).join('');
+  const tb=document.getElementById('teamsBudget');
+  if(tb)tb.innerHTML=!teams.length?'<p style="font-size:13px;color:var(--muted)">No teams.</p>':
+    teams.map(t=>{const sp=teamSpent(t.id),pct=Math.min(Math.round(sp/t.budget*100),100);
+      return`<div style="margin-bottom:14px"><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px"><span style="font-weight:500">${t.name}</span><span style="color:var(--muted)">${fmt(sp)}/${fmt(t.budget)}</span></div>
+        <div style="height:5px;background:var(--surface2);border-radius:3px;overflow:hidden"><div style="height:100%;width:${pct}%;background:${pct>80?'var(--red)':'var(--green)'};border-radius:3px;transition:width .3s"></div></div></div>`;}).join('');
+}
+
+window.renderPlayers = () => {
+  const tb=document.getElementById('playersTable'); if(!tb)return;
+  // Show/hide add button and actions header based on role
+  const addBtn=document.getElementById('addPlayerBtn');
+  if(addBtn)addBtn.style.display=isAdmin?'inline-flex':'none';
+  const actH=document.getElementById('actionsHeader');
+  if(actH)actH.style.display=isAdmin?'':'none';
+
+  const search=(document.getElementById('searchPlayer')||{value:''}).value.toLowerCase();
+  const role=(document.getElementById('filterRole')||{value:''}).value;
+  const status=(document.getElementById('filterStatus')||{value:''}).value;
+  const icon=(document.getElementById('filterIcon')||{value:''}).value;
+  const f=players.filter(p=>(!search||p.name.toLowerCase().includes(search))&&(!role||p.role===role)&&(!status||(status==='sold'?!!p.team:!p.team))&&(!icon||(icon==='icon'?p.icon:!p.icon)));
+  tb.innerHTML=f.map(p=>{const t=teams.find(x=>x.id===p.team);
+    return`<tr style="${p.icon?'background:rgba(245,158,11,0.03)':''}">
+      <td style="color:var(--muted)">${p.id}</td>
+      <td style="font-weight:500;white-space:normal">${p.name}</td>
+      <td>${p.age}</td><td>${roleBadge(p.role)}</td><td>${iconBadge(p)}</td>
+      <td>${fmt(effBase(p))}</td>
+      <td>${p.team?'<span style="color:var(--green);font-size:12px">Sold</span>':'<span style="color:#f97316;font-size:12px">Unsold</span>'}</td>
+      <td>${p.soldPrice?fmt(p.soldPrice):'-'}</td>
+      <td style="white-space:normal">${t?t.name:'-'}</td>
+      ${isAdmin?`<td><div style="display:flex;gap:3px;flex-wrap:wrap">
+        <button class="btn" style="padding:3px 7px;font-size:11px" onclick="editPlayer(${p.id})">Edit</button>
+        <button class="btn ${p.icon?'btn-gold':''}" style="padding:3px 7px;font-size:11px" onclick="toggleIcon(${p.id})">${p.icon?'★':'☆'}</button>
+        ${p.team?`<button class="btn btn-d" style="padding:3px 7px;font-size:11px" onclick="unsellPlayer(${p.id})">Unsell</button>`:`<button class="btn btn-s" style="padding:3px 7px;font-size:11px" onclick="quickSell(${p.id})">Sell</button>`}
+      </div></td>`:'<td></td>'}
+    </tr>`;}).join('');
+};
+
+function renderTeams() {
+  const g=document.getElementById('teamsGrid'); if(!g)return;
+  const tb=document.getElementById('teamsAdminBtns');
+  if(tb)tb.style.display=isAdmin?'flex':'none';
+  if(!teams.length){g.innerHTML='<p style="color:var(--muted);font-size:13px">No teams.</p>';return}
+  g.innerHTML=teams.map(t=>{const sp=teamSpent(t.id),rem=teamRem(t),cnt=players.filter(p=>p.team===t.id).length;
+    return`<div class="tcard">
+      <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:4px">
+        <div style="font-size:14px;font-weight:600">${t.name}</div>
+        ${isAdmin?`<button class="btn btn-d" style="padding:2px 7px;font-size:11px" onclick="deleteTeam(${t.id})">✕</button>`:''}
+      </div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:10px">${t.owner||'No owner set'}</div>
+      <div style="font-size:12px;color:var(--muted)">Budget: ${fmt(t.budget)}</div>
+      <div style="font-size:12px;color:var(--muted)">Spent: ${fmt(sp)}</div>
+      <div style="font-size:13px;font-weight:600;color:${rem>=0?'var(--accent)':'var(--red)'};margin:4px 0">Remaining: ${fmt(rem)}</div>
+      <div style="font-size:12px;margin-bottom:10px;color:var(--muted)">${cnt} players &nbsp;·&nbsp; Top-up: ${t.topupUsed?'<span style="color:var(--red);font-weight:500">Used</span>':'<span style="color:var(--green);font-weight:500">Available</span>'}</div>
+      ${isAdmin?`<div style="display:flex;gap:6px">
+        <button class="btn ${t.topupUsed?'':'btn-gold'}" style="padding:4px 10px;font-size:11px;${t.topupUsed?'opacity:.4;cursor:not-allowed':''}"
+          onclick="${t.topupUsed?'showMsg(\'Top-up already used!\',\'err\')':'applyTopup('+t.id+')'}">${t.topupUsed?'Used':'+ Top-up'}</button>
+        <button class="btn" style="padding:4px 10px;font-size:11px" onclick="editTeam(${t.id})">Edit</button>
+      </div>`:''}
+    </div>`;}).join('');
+}
+
+function renderSquads() {
+  const tabs=document.getElementById('squadTabs'),content=document.getElementById('squadContent'); if(!tabs||!content)return;
+  if(!teams.length){tabs.innerHTML='';content.innerHTML='<p style="font-size:13px;color:var(--muted)">No teams yet.</p>';return}
+  const idx=Math.min(sqTab,teams.length-1);
+  tabs.innerHTML=teams.map((t,i)=>`<div class="tt ${i===idx?'active':''}" onclick="sqTab=${i};renderSquads()">${t.name}</div>`).join('');
+  const t=teams[idx],tp=players.filter(p=>p.team===t.id),sp=teamSpent(t.id),rem=teamRem(t),icons=tp.filter(p=>p.icon).length;
+  if(!tp.length){content.innerHTML=`<div class="card"><div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1rem">
+    <div class="mc" style="flex:1"><div class="mc-l">Budget</div><div class="mc-v" style="font-size:16px">${fmt(t.budget)}</div></div>
+    <div class="mc" style="flex:1"><div class="mc-l">Remaining</div><div class="mc-v" style="font-size:16px;color:var(--accent)">${fmt(rem)}</div></div></div>
+    <p style="font-size:13px;color:var(--muted)">No players yet.</p></div>`;return}
+  content.innerHTML=`<div style="display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1rem">
+    <div class="mc" style="flex:1"><div class="mc-l">Players</div><div class="mc-v">${tp.length}</div></div>
+    <div class="mc" style="flex:1"><div class="mc-l">Icons</div><div class="mc-v" style="color:var(--gold)">⭐ ${icons}</div></div>
+    <div class="mc" style="flex:1"><div class="mc-l">Spent</div><div class="mc-v" style="font-size:14px;color:var(--red)">${fmt(sp)}</div></div>
+    <div class="mc" style="flex:1"><div class="mc-l">Remaining</div><div class="mc-v" style="font-size:14px;color:var(--accent)">${fmt(rem)}</div></div></div>
+  <div class="card" style="overflow-x:auto"><table>
+    <thead><tr><th>ID</th><th>Name</th><th>Age</th><th>Icon</th><th>Role</th><th>Sold Price</th></tr></thead>
+    <tbody>${tp.map(p=>`<tr style="${p.icon?'background:rgba(245,158,11,0.03)':''}"><td style="color:var(--muted)">${p.id}</td>
+      <td style="font-weight:500">${p.name}</td><td>${p.age}</td><td>${iconBadge(p)}</td>
+      <td>${roleBadge(p.role)}</td><td style="font-weight:600;color:var(--accent)">${fmt(p.soldPrice)}</td></tr>`).join('')}
+    </tbody></table></div>`;
+}
+
+function renderSold() {
+  const tb=document.getElementById('soldTable'); if(!tb)return;
+  const s=getSold();
+  if(!s.length){tb.innerHTML='<tr><td colspan="7" style="color:var(--muted);padding:2rem;text-align:center">No players sold yet.</td></tr>';return}
+  tb.innerHTML=s.map(p=>{const t=teams.find(x=>x.id===p.team);
+    return`<tr style="${p.icon?'background:rgba(245,158,11,0.03)':''}">
+      <td style="color:var(--muted)">${p.id}</td><td style="font-weight:500;white-space:normal">${p.name}</td>
+      <td>${iconBadge(p)}</td><td>${roleBadge(p.role)}</td>
+      <td>${fmt(effBase(p))}</td><td style="font-weight:600;color:var(--accent)">${fmt(p.soldPrice)}</td>
+      <td>${t?t.name:'-'}</td></tr>`;}).join('');
+}
+
+function renderAuction() {
+  const div=document.getElementById('auctionContent'); if(!div)return;
+  const p = auctionState.currentId ? players.find(x=>x.id===auctionState.currentId) : null;
+  const bid = p ? (auctionState.bid||effBase(p)) : 0;
+
+  const gridHtml=`<div class="card" style="margin-top:1rem">
+    <div style="font-size:11px;color:var(--muted);margin-bottom:8px;display:flex;gap:14px;flex-wrap:wrap;letter-spacing:.5px;text-transform:uppercase">
+      <span><span style="display:inline-block;width:10px;height:10px;background:var(--accent);border-radius:2px"></span> Current</span>
+      <span><span style="display:inline-block;width:10px;height:10px;background:rgba(34,197,94,.2);border-radius:2px;border:1px solid rgba(34,197,94,.3)"></span> Sold</span>
+      <span><span style="display:inline-block;width:10px;height:10px;background:rgba(239,68,68,.1);border-radius:2px;border:1px solid rgba(239,68,68,.2)"></span> Skipped</span>
+    </div>
+    <div class="pid-grid">${players.map(pl=>{
+      const isCur=auctionState.currentId===pl.id,isSold=!!pl.team,isSkip=auctionState.drawn.includes(pl.id)&&!pl.team&&!isCur;
+      let cls='pid-cell';if(isCur)cls+=' pid-active';else if(isSold)cls+=' pid-sold';else if(isSkip)cls+=' pid-skip';
+      return`<div class="${cls}" title="${pl.name}">#${pl.id}${pl.icon?' ⭐':''}</div>`;}).join('')}</div></div>`;
+
+  if (!isAdmin) {
+    // Viewer-only auction view
+    if(!p){div.innerHTML=`<div style="text-align:center;padding:4rem 1rem;color:var(--muted)"><div style="font-size:3rem;margin-bottom:1rem">⏳</div><div style="font-size:16px">Waiting for admin to draw next player...</div></div>${gridHtml}`;return}
+    const maxBid=effMax(p);
+    div.innerHTML=`<div class="acard" style="${p.icon?'border:1px solid rgba(245,158,11,.3)':''}">
+      <div style="margin-bottom:8px">${roleBadge(p.role)}${p.icon?'&nbsp;<span class="badge b-gold">⭐ Icon</span>':''}</div>
+      <div class="pname">${p.name}</div>
+      <div class="pmeta">Age ${p.age} &nbsp;·&nbsp; #${p.id} &nbsp;·&nbsp; Max: ${fmt(maxBid)}</div>
+      <div class="cbid" style="${p.icon?'color:var(--gold)':''}">${fmt(bid)}</div>
+      <div style="font-size:12px;color:var(--muted)">Current Bid &nbsp;·&nbsp; Base: ${fmt(effBase(p))}</div>
+      ${auctionState.sel?`<div style="margin-top:1rem;padding:8px 16px;background:rgba(34,197,94,0.1);border-radius:var(--radius);display:inline-block;font-size:13px;color:#86efac;font-weight:500">Leading: ${(teams.find(t=>t.id===auctionState.sel)||{}).name||''}</div>`:''}
+    </div>${gridHtml}`;
+    return;
+  }
+
+  const drawHtml=`<div class="draw-box">
+    <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:1rem;letter-spacing:.5px;text-transform:uppercase">Draw a Player ID</div>
+    <div style="display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap">
+      <input class="draw-input" type="number" id="drawIdInput" min="1" max="${players.length}" placeholder="—" onkeydown="if(event.key==='Enter')drawPlayer()">
+      <button class="btn btn-p" style="padding:12px 24px;font-size:15px;border-radius:var(--radius-lg)" onclick="drawPlayer()">Draw ↗</button>
+    </div>
+    <div style="font-size:11px;color:var(--muted);margin-top:10px">Type any ID from 1 to ${players.length} and press Draw</div>
+  </div>`;
+
+  if(!p){div.innerHTML=drawHtml+gridHtml;return}
+
+  const maxBid=effMax(p);
+  div.innerHTML=`${drawHtml}
+    <div style="background:var(--surface2);border-radius:var(--radius-lg);padding:1rem 1.25rem;margin-bottom:1rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;border:1px solid var(--border)">
+      <div style="font-size:28px;font-weight:700;color:var(--muted);font-family:'Bebas Neue',sans-serif">#${p.id}</div>
+      <div style="flex:1;min-width:150px">
+        <div style="font-size:17px;font-weight:600">${p.name}${p.icon?' ⭐':''}</div>
+        <div style="font-size:12px;color:var(--muted)">Age ${p.age} &nbsp;·&nbsp; ${p.role} &nbsp;·&nbsp; Max: ${fmt(maxBid)}</div>
+      </div>
+      <button class="btn" style="padding:5px 10px;font-size:11px" onclick="showSpotlight(${p.id})">View Card</button>
+    </div>
+    <div class="acard" style="${p.icon?'border:1px solid rgba(245,158,11,.3)':''}">
+      <div style="margin-bottom:8px">${roleBadge(p.role)}${p.icon?'&nbsp;<span class="badge b-gold">⭐ Icon</span>':''}</div>
+      <div class="pname">${p.name}</div>
+      <div class="pmeta">Age ${p.age} &nbsp;·&nbsp; #${p.id} &nbsp;·&nbsp; Max: ${fmt(maxBid)}</div>
+      <div class="cbid" style="${p.icon?'color:var(--gold)':''}">${fmt(bid)}</div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:.5rem">Current Bid &nbsp;·&nbsp; Base: ${fmt(effBase(p))}</div>
+      <div class="bidrow">
+        <button class="btn" onclick="adjBid(-5000)">−₹5K</button>
+        <button class="btn" onclick="adjBid(-10000)">−₹10K</button>
+        <button class="btn btn-p" onclick="adjBid(5000)">+₹5K</button>
+        <button class="btn btn-p" onclick="adjBid(10000)">+₹10K</button>
+        <button class="btn btn-p" onclick="adjBid(25000)">+₹25K</button>
+        <button class="btn btn-p" onclick="adjBid(50000)">+₹50K</button>
+      </div>
+      ${bid>=maxBid?`<div style="margin-top:8px;font-size:12px;color:var(--red)">Max bid of ${fmt(maxBid)} reached!</div>`:''}
+    </div>
+    <div class="card" style="margin-bottom:1rem">
+      <div style="font-size:12px;font-weight:600;margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)">Select Winning Team</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px">
+        ${teams.map(t=>{const rem=teamRem(t),ok=rem>=bid;
+          return`<div class="tpill ${auctionState.sel===t.id?'sel':''} ${!ok?'noaff':''}" onclick="selTeam(${t.id})">
+            <span>${t.name}</span><span style="font-size:10px;opacity:.7">${fmt(rem)}</span></div>`;}).join('')}
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn btn-s" onclick="sellPlayer()" ${!auctionState.sel?'disabled':''}>✓ Confirm Sale</button>
+      <button class="btn btn-d" onclick="skipPlayer()">Skip / Unsold</button>
+    </div>${gridHtml}`;
+}
+
+function renderLiveView() {
+  const lv=document.getElementById('lvContent'),ls=document.getElementById('lvStats'); if(!lv||!ls)return;
+  const sold=getSold(),unsold=getUnsold(),spent=sold.reduce((s,p)=>s+(p.soldPrice||0),0);
+  ls.innerHTML=`<div class="mc"><div class="mc-l">Remaining</div><div class="mc-v">${unsold.length}</div></div>
+    <div class="mc"><div class="mc-l">Sold</div><div class="mc-v" style="color:var(--green)">${sold.length}</div></div>
+    <div class="mc"><div class="mc-l">Total Spent</div><div class="mc-v" style="font-size:14px;color:var(--accent)">${fmt(spent)}</div></div>`;
+  const p = auctionState.currentId ? players.find(x=>x.id===auctionState.currentId) : null;
+  if(!p){lv.innerHTML='<div class="lv-name" style="font-size:22px;margin-top:2rem;color:var(--muted)">Waiting for next draw...</div>';return}
+  const bid=auctionState.bid||effBase(p),selT=teams.find(t=>t.id===auctionState.sel);
+  lv.innerHTML=`<div style="margin-bottom:.75rem">${roleBadge(p.role)}${p.icon?'&nbsp;<span class="badge b-gold">⭐ Icon</span>':''}</div>
+    <div class="lv-name">${p.name}</div>
+    <div style="font-size:14px;color:var(--muted);margin-bottom:1.5rem">Age ${p.age} &nbsp;·&nbsp; #${p.id} &nbsp;·&nbsp; Max: ${fmt(effMax(p))}</div>
+    <div class="lv-bid" style="${p.icon?'color:var(--gold)':''}">${fmt(bid)}</div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:1.5rem">Current Bid &nbsp;·&nbsp; Base: ${fmt(effBase(p))}</div>
+    ${selT?`<div style="font-size:20px;font-weight:600;color:var(--text)">${selT.name}</div><div style="font-size:13px;color:#86efac;background:rgba(34,197,94,0.1);padding:.5rem 1.5rem;border-radius:20px;display:inline-block;margin-top:.75rem;font-weight:500">Leading Bid</div>`:'<div style="font-size:13px;color:#fca5a5;background:rgba(239,68,68,0.1);padding:.5rem 1.5rem;border-radius:20px;display:inline-block">No bid yet</div>'}`;
+}
+
+// ─── AUCTION ACTIONS ──────────────────────────────────────
+window.drawPlayer = () => {
+  if(!isAdmin){showMsg('Admin only','err');return}
+  const inp=document.getElementById('drawIdInput'); if(!inp)return;
+  const id=parseInt(inp.value);
+  if(!id||id<1||id>players.length){showMsg('Enter a valid ID between 1 and '+players.length,'err');return}
+  const p=players.find(x=>x.id===id);
+  if(!p){showMsg('Player #'+id+' not found','err');return}
+  if(p.team){showMsg(p.name+' is already sold!','err');return}
+  auctionState.currentId=id; auctionState.bid=effBase(p); auctionState.sel=null;
+  if(!auctionState.drawn.includes(id))auctionState.drawn.push(id);
+  saveToFirestore(); showSpotlight(id); renderAuction(); renderLiveView();
+};
+
+window.adjBid = (d) => {
+  if(!isAdmin)return;
+  const p=players.find(x=>x.id===auctionState.currentId); if(!p)return;
+  const base=effBase(p),max=effMax(p);
+  let nb=Math.max(base,(auctionState.bid||base)+d);
+  if(nb>max)nb=max;
+  auctionState.bid=nb; auctionState.sel=null; saveToFirestore(); renderAuction(); renderLiveView();
+};
+
+window.selTeam = (id) => {
+  if(!isAdmin)return;
+  auctionState.sel=auctionState.sel===id?null:id; saveToFirestore(); renderAuction(); renderLiveView();
+};
+
+window.sellPlayer = async () => {
+  if(!isAdmin)return;
+  const p=players.find(x=>x.id===auctionState.currentId); if(!p||!auctionState.sel)return;
+  const t=teams.find(x=>x.id===auctionState.sel),bid=auctionState.bid||effBase(p);
+  if(bid>effMax(p)){showMsg('Exceeds max bid '+fmt(effMax(p)),'err');return}
+  if(teamSpent(t.id)+bid>t.budget){showMsg('Team budget exceeded!','err');return}
+  const i=players.findIndex(x=>x.id===p.id);
+  players[i].soldPrice=bid; players[i].team=auctionState.sel;
+  auctionState.currentId=null; auctionState.bid=0; auctionState.sel=null;
+  await saveToFirestore(); showMsg(p.name+' sold to '+t.name+' for '+fmt(bid)+'!','ok'); renderAll();
+};
+
+window.skipPlayer = () => {
+  if(!isAdmin)return;
+  auctionState.currentId=null; auctionState.bid=0; auctionState.sel=null;
+  saveToFirestore(); renderAuction(); renderLiveView();
+};
+
+// ─── SPOTLIGHT & LIVE ─────────────────────────────────────
+window.showSpotlight = (id) => {
+  const p=players.find(x=>x.id===id); if(!p)return;
+  document.getElementById('sp-inner').className='sp-card'+(p.icon?' icon-card':'');
+  document.getElementById('sp-lbl').textContent=p.icon?'⭐ Icon Player':'Now Up For Auction';
+  document.getElementById('sp-lbl').className=p.icon?'sp-lbl-icon':'sp-lbl';
+  document.getElementById('sp-name').textContent=p.name;
+  document.getElementById('sp-sub').textContent='Player #'+p.id;
+  document.getElementById('sp-age').textContent=p.age;
+  document.getElementById('sp-role').textContent=p.role;
+  document.getElementById('sp-price').textContent=fmt(effBase(p));
+  const bc=p.role==='Batsmen'?'sp-bat':p.role==='Bowler'?'sp-bowl':'sp-all';
+  document.getElementById('sp-badges').innerHTML=`<span class="sp-badge ${bc}">${p.role}</span>${p.icon?'&nbsp;<span class="sp-badge sp-icon-b">⭐ Icon</span>':''}`;
+  document.getElementById('spotlight').classList.add('on');
+};
+window.closeSpotlight = () => document.getElementById('spotlight').classList.remove('on');
+window.openLiveView = () => {renderLiveView();document.getElementById('liveView').classList.add('on')};
+window.closeLiveView = () => document.getElementById('liveView').classList.remove('on');
+
+// ─── PLAYER ACTIONS ───────────────────────────────────────
+window.toggleIcon = async (id) => {
+  if(!isAdmin)return;
+  const i=players.findIndex(p=>p.id===id); players[i].icon=!players[i].icon;
+  await saveToFirestore(); renderAll(); showMsg(players[i].name+(players[i].icon?' is now an Icon ⭐':' is now Normal.'),'ok');
+};
+window.unsellPlayer = async (id) => {
+  if(!isAdmin)return;
+  if(!confirm('Remove from team?'))return;
+  const i=players.findIndex(p=>p.id===id); players[i].soldPrice=null; players[i].team=null;
+  await saveToFirestore(); renderAll(); showMsg('Player moved back to unsold.','ok');
+};
+window.openAddPlayer = () => {
+  if(!isAdmin)return;
+  document.getElementById('playerModalTitle').textContent='Add Player';
+  ['pName','pAge'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('pBase').value='0'; document.getElementById('pIcon').checked=false; document.getElementById('pEditId').value='';
+  document.getElementById('addPlayerModal').classList.add('open');
+};
+window.editPlayer = (id) => {
+  if(!isAdmin)return;
+  const p=players.find(x=>x.id===id);
+  document.getElementById('playerModalTitle').textContent='Edit — '+p.name;
+  document.getElementById('pName').value=p.name; document.getElementById('pAge').value=p.age;
+  document.getElementById('pRole').value=p.role; document.getElementById('pBase').value=p.basePrice||0;
+  document.getElementById('pIcon').checked=!!p.icon; document.getElementById('pEditId').value=p.id;
+  document.getElementById('addPlayerModal').classList.add('open');
+};
+window.savePlayer = async () => {
+  if(!isAdmin)return;
+  const name=document.getElementById('pName').value.trim(),age=parseInt(document.getElementById('pAge').value)||0;
+  const role=document.getElementById('pRole').value,base=parseInt(document.getElementById('pBase').value)||0;
+  const icon=document.getElementById('pIcon').checked,eid=parseInt(document.getElementById('pEditId').value)||0;
+  if(!name){showMsg('Enter player name','err');return}
+  if(eid){const i=players.findIndex(p=>p.id===eid);players[i]={...players[i],name,age,role,basePrice:base,icon}}
+  else{const mx=players.reduce((m,p)=>Math.max(m,p.id),0);players.push({id:mx+1,name,age,role,icon,basePrice:base,soldPrice:null,team:null})}
+  await saveToFirestore(); closeModal('addPlayerModal'); showMsg(eid?'Updated!':'Player added!','ok'); renderAll();
+};
+
+// ─── TEAM ACTIONS ─────────────────────────────────────────
+window.openTopup = () => {
+  if(!isAdmin)return;
+  document.getElementById('topupList').innerHTML=teams.map(t=>`
+    <div class="topup-row">
+      <div><div style="font-size:13px;font-weight:500">${t.name}</div>
+        <div style="font-size:12px;color:var(--muted)">Remaining: ${fmt(teamRem(t))} &nbsp;·&nbsp; ${t.topupUsed?'<span style="color:var(--red)">Already used</span>':'<span style="color:var(--green)">Available</span>'}</div></div>
+      <button class="btn ${t.topupUsed?'':'btn-gold'}" style="padding:5px 12px;font-size:12px;${t.topupUsed?'opacity:.4;cursor:not-allowed':''}"
+        onclick="${t.topupUsed?'showMsg(\'Already used!\',\'err\')':'applyTopup('+t.id+')'}">${t.topupUsed?'Used':'+ '+fmt(rules.topupAmt)}</button>
+    </div>`).join('');
+  document.getElementById('topupModal').classList.add('open');
+};
+window.applyTopup = async (tid) => {
+  if(!isAdmin)return;
+  const i=teams.findIndex(t=>t.id===tid);
+  if(teams[i].topupUsed){showMsg('Top-up already used!','err');return}
+  teams[i].budget+=rules.topupAmt; teams[i].topupUsed=true;
+  await saveToFirestore(); renderAll(); openTopup(); showMsg(teams[i].name+' topped up!','ok');
+};
+window.openAddTeam = () => {
+  if(!isAdmin)return;
+  document.getElementById('teamModalTitle').textContent='Add Team';
+  ['tName','tOwner'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('tBudget').value=rules.startBudget; document.getElementById('tEditId').value='';
+  document.getElementById('addTeamModal').classList.add('open');
+};
+window.editTeam = (id) => {
+  if(!isAdmin)return;
+  const t=teams.find(x=>x.id===id);
+  document.getElementById('teamModalTitle').textContent='Edit — '+t.name;
+  document.getElementById('tName').value=t.name; document.getElementById('tOwner').value=t.owner||'';
+  document.getElementById('tBudget').value=t.budget; document.getElementById('tEditId').value=t.id;
+  document.getElementById('addTeamModal').classList.add('open');
+};
+window.saveTeam = async () => {
+  if(!isAdmin)return;
+  const name=document.getElementById('tName').value.trim(),owner=document.getElementById('tOwner').value.trim();
+  const budget=parseInt(document.getElementById('tBudget').value)||rules.startBudget;
+  if(!name){showMsg('Enter team name','err');return}
+  const eid=parseInt(document.getElementById('tEditId').value)||0;
+  if(eid){const i=teams.findIndex(t=>t.id===eid);teams[i]={...teams[i],name,owner,budget}}
+  else{const mx=teams.reduce((m,t)=>Math.max(m,t.id),0);teams.push({id:mx+1,name,owner,budget,topupUsed:false})}
+  await saveToFirestore(); closeModal('addTeamModal'); showMsg('Team saved!','ok'); renderAll();
+};
+window.deleteTeam = async (id) => {
+  if(!isAdmin)return;
+  if(!confirm('Remove this team? Their players will be unsold.'))return;
+  players.forEach((p,i)=>{if(p.team===id){players[i].team=null;players[i].soldPrice=null}});
+  teams=teams.filter(t=>t.id!==id);
+  await saveToFirestore(); renderAll(); showMsg('Team removed.','ok');
+};
+
+// ─── QUICK SELL ───────────────────────────────────────────
+window.quickSell = (id) => {
+  if(!isAdmin)return;
+  const p=players.find(x=>x.id===id);
+  document.getElementById('sellModalTitle').textContent='Sell — '+p.name;
+  document.getElementById('sellModalBody').innerHTML=`
+    <div class="fr"><label>Sold Price (₹)</label><input id="qP" type="number" value="${effBase(p)}"></div>
+    <div class="fr"><label>Team</label><select id="qT"><option value="">Select...</option>${teams.map(t=>`<option value="${t.id}">${t.name}</option>`).join('')}</select></div>
+    <div class="mbtns"><button class="btn btn-p" onclick="confirmQS(${id})">Sell</button><button class="btn" onclick="closeModal('sellModal')">Cancel</button></div>`;
+  document.getElementById('sellModal').classList.add('open');
+};
+window.confirmQS = async (id) => {
+  const price=parseInt(document.getElementById('qP').value)||0,tid=parseInt(document.getElementById('qT').value)||0;
+  if(!tid){showMsg('Select a team','err');return}
+  const p=players.find(x=>x.id===id),t=teams.find(x=>x.id===tid);
+  if(price>effMax(p)){showMsg('Exceeds max bid '+fmt(effMax(p)),'err');return}
+  if(teamSpent(tid)+price>t.budget){showMsg('Team budget exceeded!','err');return}
+  const i=players.findIndex(p=>p.id===id); players[i].soldPrice=price; players[i].team=tid;
+  await saveToFirestore(); closeModal('sellModal'); showMsg('Player sold!','ok'); renderAll();
+};
+
+// ─── RESET & EXPORT ───────────────────────────────────────
+window.hardReset = async () => {
+  if(!isAdmin)return;
+  players=makeDefaultPlayers(); teams=JSON.parse(JSON.stringify(DEFAULT_TEAMS));
+  rules={...DEFAULT_RULES}; auctionState={currentId:null,bid:0,sel:null,drawn:[]};
+  await saveToFirestore(); syncRuleInputs(); renderAll(); showMsg('Full reset done!','ok');
+};
+window.exportData = () => {
+  const rows=[['ID','Name','Age','Icon','Role','Base','Sold Price','Team']];
+  players.forEach(p=>{const t=teams.find(x=>x.id===p.team);rows.push([p.id,p.name,p.age,p.icon?'Yes':'No',p.role,effBase(p),p.soldPrice||'',t?t.name:'Unsold'])});
+  const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(rows.map(r=>r.join(',')).join('\n'));a.download='sbct_auction.csv';a.click();
+};
+
+// ─── UTILS ────────────────────────────────────────────────
+window.maybeClose = (id,e) => {if(e.target===document.getElementById(id))closeModal(id)};
+window.closeModal = (id) => document.getElementById(id).classList.remove('open');
+window.showMsg = (text,type) => {
+  const el=document.getElementById('msgBanner');el.className='msg msg-'+(type==='err'?'err':'ok');
+  el.textContent=text;el.style.display='block';setTimeout(()=>el.style.display='none',3500);
+};
+window.showPage = (name,btn) => {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  if(btn)btn.classList.add('active');
+  if(name==='auction')renderAuction();
+  if(name==='squads')renderSquads();
+};
+window.sqTab = 0;
+</script>
+</body>
+</html>
