@@ -405,11 +405,15 @@ import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/fi
 import {
   getFirestore, doc, setDoc, onSnapshot
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import { firebaseConfig } from "./firebase-config.js";
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+const firebaseConfig = {
+  apiKey: "AIzaSyCMDfMPuNxGirRIroAbCUSElsP6JsJ8PEM",
+  authDomain: "auctionmales.firebaseapp.com",
+  projectId: "auctionmales",
+  storageBucket: "auctionmales.firebasestorage.app",
+  messagingSenderId: "33238139903",
+  appId: "1:33238139903:web:c62d92f5daa4d9a21e5dca",
+  measurementId: "G-ZG457T4W9H"
+};
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
@@ -455,50 +459,43 @@ const getUnsold = () => players.filter(p=>!p.team);
 // unsubscribe handle so we can detach if needed
 let _unsubSnapshot = null;
 
+function showApp() {
+  document.getElementById('loadingScreen').style.display = 'none';
+  document.getElementById('mainApp').style.display = 'block';
+}
+
 function startRealtimeListener() {
-  // Detach any existing listener first
   if (_unsubSnapshot) _unsubSnapshot();
 
+  // Safety fallback — always show app after 4s no matter what
+  const safetyTimer = setTimeout(showApp, 4000);
+
   _unsubSnapshot = onSnapshot(doc(db, 'auction', 'main'), (snap) => {
+    clearTimeout(safetyTimer);
+
     if (snap.exists()) {
       const d = snap.data();
-      // For admin: don't overwrite local state mid-interaction
-      // (they're the source of truth). For viewers: always sync.
-      if (!isAdmin) {
-        if (d.players && d.players.length) players = d.players;
-        if (d.teams && d.teams.length) teams = d.teams;
-        if (d.rules) rules = {...DEFAULT_RULES, ...d.rules};
-        if (d.auctionState) auctionState = d.auctionState;
-        syncRuleInputs();
-        renderAll();
-        // Flash a subtle "updated" indicator for viewers
-        flashUpdateBadge();
-      } else {
-        // Admin: sync on first load only (snap.metadata.hasPendingWrites === false
-        // and we haven't done our first render yet is handled by the flag below)
-        if (!_initialLoadDone) {
-          if (d.players && d.players.length) players = d.players;
-          if (d.teams && d.teams.length) teams = d.teams;
-          if (d.rules) rules = {...DEFAULT_RULES, ...d.rules};
-          if (d.auctionState) auctionState = d.auctionState;
-          syncRuleInputs();
-          renderAll();
-          document.getElementById('loadingScreen').style.display = 'none';
-          document.getElementById('mainApp').style.display = 'block';
-          _initialLoadDone = true;
-        }
-      }
+      if (d.players && d.players.length) players = d.players;
+      if (d.teams && d.teams.length) teams = d.teams;
+      if (d.rules) rules = {...DEFAULT_RULES, ...d.rules};
+      if (d.auctionState) auctionState = d.auctionState;
+      syncRuleInputs();
+      renderAll();
+      showApp();
+      if (_initialLoadDone && !isAdmin) flashUpdateBadge();
+      _initialLoadDone = true;
     } else {
-      // First run — seed Firestore with defaults (admin only)
+      // Doc does not exist yet — seed with defaults if admin, show app either way
       if (isAdmin) saveToFirestore();
-      document.getElementById('loadingScreen').style.display = 'none';
-      document.getElementById('mainApp').style.display = 'block';
+      renderAll();
+      showApp();
       _initialLoadDone = true;
     }
   }, (err) => {
-    console.error('Snapshot error', err);
-    document.getElementById('loadingScreen').style.display = 'none';
-    document.getElementById('mainApp').style.display = 'block';
+    clearTimeout(safetyTimer);
+    console.error('Snapshot error:', err);
+    renderAll();
+    showApp();
   });
 }
 
@@ -527,17 +524,7 @@ onAuthStateChanged(auth, (user) => {
   isAdmin = !!user;
   _initialLoadDone = false;
   applyRole();
-  // Start (or restart) the real-time listener
   startRealtimeListener();
-  // For viewers: show app immediately after auth resolves,
-  // the snapshot callback will populate data
-  if (!isAdmin) {
-    // Show app shell right away; snapshot will fill in data
-    setTimeout(() => {
-      document.getElementById('loadingScreen').style.display = 'none';
-      document.getElementById('mainApp').style.display = 'block';
-    }, 800); // small delay to let first snapshot arrive
-  }
 });
 
 function applyRole() {
