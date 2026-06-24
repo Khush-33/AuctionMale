@@ -1,0 +1,15 @@
+// firestore.rules
+// Paste this into Firebase Console → Firestore → Rules
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Auction data: anyone can READ, only authenticated admin can WRITE
+    match /auction/{document=**} {
+      allow read: if true;
+      allow write: if request.auth != null
+                   && request.auth.token.email == 'khushjain8419@gmail.com';
+    }
+  }
+}
