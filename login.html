@@ -265,7 +265,9 @@
       await signInWithEmailAndPassword(auth, email, pwd);
       window.location.href = 'index.html?admin=1';
     } catch(e) {
-      showErr('Invalid username or password.');
+      console.error('Login error:', e);
+      const msg = e?.code === 'auth/user-not-found' ? 'User not found.' : e?.code === 'auth/wrong-password' ? 'Wrong password.' : e?.message || 'Invalid username or password.';
+      showErr(msg);
       btn.disabled = false;
       btn.textContent = 'Sign In';
     }

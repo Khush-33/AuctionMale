@@ -142,33 +142,72 @@ tr:hover td{background:rgba(255,255,255,0.02)}
 .pid-skip{background:rgba(239,68,68,0.08);color:#fca5a5;border-color:rgba(239,68,68,0.2)}
 
 /* ── SPOTLIGHT ── */
-#spotlight{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.88);backdrop-filter:blur(8px)}
+#spotlight{position:fixed;inset:0;z-index:9999;display:none;background:rgba(0,0,0,0.92);backdrop-filter:blur(6px)}
 #spotlight.on{display:flex}
-.sp-card{border-radius:24px;padding:2.5rem 3rem;text-align:center;max-width:520px;width:92%;animation:spP .4s cubic-bezier(.34,1.56,.64,1);position:relative}
-.sp-card.male-card{background:linear-gradient(145deg,#0d1b4b,#1a2f7a);border:1px solid rgba(59,130,246,0.4)}
-.sp-card.female-card{background:linear-gradient(145deg,#2d0a3d,#5b1572);border:1px solid rgba(192,38,211,0.5)}
-.sp-card.icon-card{background:linear-gradient(145deg,#2d1c00,#5c3b00);border-color:rgba(245,158,11,0.5)}
-@keyframes spP{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}
-.sp-lbl{font-size:10px;letter-spacing:3px;text-transform:uppercase;margin-bottom:1rem}
-.sp-lbl.male{color:#8fa8e8}.sp-lbl.female{color:#d8a8e8}
-.sp-name{font-size:32px;font-weight:700;color:#fff;margin-bottom:.4rem;line-height:1.2;font-family:'Bebas Neue',sans-serif;letter-spacing:1px}
-.sp-sub{font-size:13px;margin-bottom:1.2rem}
-.sp-sub.male{color:#8fa8e8}.sp-sub.female{color:#d8a8e8}
-.sp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin-bottom:1.5rem}
-.sp-stat{background:rgba(255,255,255,.07);border-radius:10px;padding:.65rem}
-.sp-sl{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,.5);margin-bottom:3px}
-.sp-sv{font-size:17px;font-weight:600;color:#fff}
-.sp-cx{position:absolute;top:1rem;right:1rem;color:rgba(255,255,255,.4);cursor:pointer;font-size:22px;background:none;border:none;line-height:1}
-.sp-badge{display:inline-block;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:600;margin-bottom:1rem}
-.sp-bat-m{background:rgba(59,130,246,.25);color:#93c5fd}
-.sp-bat-f{background:rgba(192,38,211,.25);color:#f0abfc}
-.sp-bowl{background:rgba(245,158,11,.25);color:#fcd34d}
-.sp-all{background:rgba(34,197,94,.25);color:#86efac}
+
+/* Full-screen card inside spotlight */
+.sp-card{
+  display:flex;flex-direction:row;align-items:stretch;
+  width:100vw;height:100vh;overflow:hidden;position:relative;
+}
+.sp-card.male-card{background:linear-gradient(120deg,#060d1f 0%,#0e1e44 60%,#152b66 100%)}
+.sp-card.female-card{background:linear-gradient(120deg,#14001e 0%,#2d0a3d 60%,#5b1572 100%)}
+.sp-card.icon-card{background:linear-gradient(120deg,#1a0d00 0%,#2d1c00 60%,#5c3b00 100%)}
+
+/* Left: full-height photo column */
+.sp-photo-col{
+  flex:0 0 42%;
+  height:100%;
+  position:relative;
+  overflow:hidden;
+}
+.sp-photo-col::after{
+  content:'';
+  position:absolute;inset:0;
+  background:linear-gradient(to right,transparent 70%,rgba(0,0,0,0.6) 100%);
+  pointer-events:none;
+}
+#sp-photo{
+  width:100%;height:100%;
+  object-fit:cover;object-position:top center;
+  display:block;
+}
+.sp-photo-fb{
+  width:100%;height:100%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:100px;
+  background:rgba(255,255,255,0.03);
+  border-right:1px solid rgba(255,255,255,0.06);
+}
+
+/* Right: details column */
+.sp-details{
+  flex:1;height:100%;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:3rem 3.5rem;
+  overflow-y:auto;
+}
+.sp-lbl{font-size:11px;letter-spacing:4px;text-transform:uppercase;margin-bottom:1.2rem;font-weight:600}
+.sp-lbl.male{color:#6ea3f7}.sp-lbl.female{color:#d8a8e8}
+.sp-name{font-size:clamp(36px,5vw,70px);font-weight:700;color:#fff;margin-bottom:.4rem;line-height:1.05;font-family:'Bebas Neue',sans-serif;letter-spacing:2px}
+.sp-sub{font-size:14px;margin-bottom:1.5rem;opacity:.65;letter-spacing:.5px}
+.sp-sub.male{color:#a8c4f5}.sp-sub.female{color:#d8a8e8}
+.sp-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;margin-bottom:2rem;max-width:420px}
+.sp-stat{background:rgba(255,255,255,.07);border-radius:12px;padding:.9rem 1rem;border:1px solid rgba(255,255,255,.06)}
+.sp-sl{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:rgba(255,255,255,.45);margin-bottom:6px}
+.sp-sv{font-size:20px;font-weight:700;color:#fff}
+.sp-cx{position:absolute;top:1.2rem;right:1.4rem;color:rgba(255,255,255,.5);cursor:pointer;font-size:24px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:50%;width:38px;height:38px;display:flex;align-items:center;justify-content:center;line-height:1;z-index:2;transition:all .15s}
+.sp-cx:hover{background:rgba(255,255,255,.18);color:#fff}
+.sp-badge{display:inline-block;padding:5px 16px;border-radius:20px;font-size:12px;font-weight:600;margin-bottom:1.4rem;letter-spacing:.5px}
+.sp-bat-m{background:rgba(59,130,246,.25);color:#93c5fd;border:1px solid rgba(59,130,246,.3)}
+.sp-bat-f{background:rgba(192,38,211,.25);color:#f0abfc;border:1px solid rgba(192,38,211,.3)}
+.sp-bowl{background:rgba(245,158,11,.25);color:#fcd34d;border:1px solid rgba(245,158,11,.3)}
+.sp-all{background:rgba(34,197,94,.25);color:#86efac;border:1px solid rgba(34,197,94,.3)}
 .sp-icon-b{background:rgba(245,158,11,.2);color:var(--gold);border:1px solid rgba(245,158,11,.4)}
 
 /* ── LIVE VIEW ── */
-#liveView{position:fixed;inset:0;z-index:9998;display:none;background:var(--bg);overflow-y:auto;padding:2rem}
-#liveView.on{display:block}
+#liveView{position:fixed;inset:0;z-index:9998;display:none;background:rgba(0,0,0,0.92);backdrop-filter:blur(6px)}
+#liveView.on{display:flex}
 .lv-inner{max-width:680px;margin:0 auto;text-align:center}
 .lv-dot{width:8px;height:8px;border-radius:50%;animation:pulse 1s infinite;display:inline-block}
 .lv-dot.male{background:#3b82f6}.lv-dot.female{background:#c026d3}
@@ -380,31 +419,66 @@ tr:hover td{background:rgba(255,255,255,0.02)}
 <div id="spotlight" onclick="closeSpotlight()">
   <div id="sp-inner" class="sp-card male-card" onclick="event.stopPropagation()">
     <button class="sp-cx" onclick="closeSpotlight()">✕</button>
-    <div id="sp-lbl" class="sp-lbl male"></div>
-    <div id="sp-photo-wrap" style="display:flex;justify-content:center;margin:0.75rem 0 1rem">
-      <img id="sp-photo" src="" alt="" style="width:130px;height:130px;object-fit:cover;border-radius:50%;border:3px solid var(--accent);box-shadow:0 0 24px rgba(99,102,241,0.35);display:none" onerror="this.style.display='none';document.getElementById('sp-photo-fb').style.display='flex'">
-      <div id="sp-photo-fb" style="display:none;width:130px;height:130px;border-radius:50%;border:3px solid var(--border2);background:var(--surface2);align-items:center;justify-content:center;font-size:52px">🧑</div>
+
+    <!-- LEFT: full-height photo -->
+    <div class="sp-photo-col">
+      <img id="sp-photo" src="" alt="" onerror="this.style.display='none';document.getElementById('sp-photo-fb').style.display='flex'">
+      <div id="sp-photo-fb" class="sp-photo-fb" style="display:none">🧑</div>
     </div>
-    <div id="sp-name" class="sp-name"></div>
-    <div id="sp-sub" class="sp-sub male"></div>
-    <div id="sp-badges" style="margin-bottom:1rem"></div>
-    <div class="sp-grid">
-      <div class="sp-stat"><div class="sp-sl">Age</div><div id="sp-age" class="sp-sv"></div></div>
-      <div class="sp-stat"><div class="sp-sl">Role</div><div id="sp-role" class="sp-sv" style="font-size:13px;padding-top:3px"></div></div>
-      <div class="sp-stat"><div class="sp-sl">Base Price</div><div id="sp-price" class="sp-sv" style="font-size:14px"></div></div>
+
+    <!-- RIGHT: details -->
+    <div class="sp-details">
+      <div id="sp-lbl" class="sp-lbl male"></div>
+      <div id="sp-name" class="sp-name"></div>
+      <div id="sp-sub" class="sp-sub male"></div>
+      <div id="sp-badges" style="margin-bottom:.5rem"></div>
+      <div class="sp-grid">
+        <div class="sp-stat"><div class="sp-sl">Age</div><div id="sp-age" class="sp-sv"></div></div>
+        <div class="sp-stat"><div class="sp-sl">Role</div><div id="sp-role" class="sp-sv" style="font-size:14px;padding-top:2px"></div></div>
+        <div class="sp-stat"><div class="sp-sl">Base Price</div><div id="sp-price" class="sp-sv" style="font-size:16px"></div></div>
+      </div>
     </div>
   </div>
 </div>
 
 <!-- LIVE VIEW -->
-<div id="liveView">
-  <button onclick="closeLiveView()" style="position:fixed;top:1rem;right:1rem;z-index:1;padding:6px 14px;border-radius:var(--radius);border:1px solid var(--border2);background:var(--surface);cursor:pointer;font-size:12px;color:var(--text);font-family:'DM Sans',sans-serif">✕ Close</button>
-  <div class="lv-inner">
-    <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:1rem;display:flex;align-items:center;justify-content:center;gap:6px">
-      <span class="lv-dot male" id="lvDot2"></span><span id="lvTitle">Live Auction</span>
+<div id="liveView" onclick="closeLiveView()">
+  <div id="lv-inner" class="sp-card male-card" onclick="event.stopPropagation()">
+    <button class="sp-cx" onclick="closeLiveView()">✕</button>
+
+    <!-- LEFT: full-height photo -->
+    <div class="sp-photo-col">
+      <img id="lv-photo" src="" alt="" onerror="this.style.display='none';document.getElementById('lv-photo-fb').style.display='flex'">
+      <div id="lv-photo-fb" class="sp-photo-fb" style="display:none">🧑</div>
     </div>
-    <div id="lvContent"></div>
-    <div class="lv-stats" id="lvStats"></div>
+
+    <!-- RIGHT: details -->
+    <div class="sp-details" style="justify-content:flex-start;padding:2.5rem 3rem">
+      <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:1.2rem;display:flex;align-items:center;gap:6px">
+        <span class="lv-dot male" id="lvDot2"></span><span id="lvTitle">Live Auction</span>
+      </div>
+
+      <div id="lv-lbl" class="sp-lbl male"></div>
+      <div id="lv-name" class="sp-name"></div>
+      <div id="lv-sub" class="sp-sub male"></div>
+      <div id="lv-badges" style="margin-bottom:.5rem"></div>
+
+      <div class="sp-grid" style="margin-bottom:1.5rem">
+        <div class="sp-stat"><div class="sp-sl">Age</div><div id="lv-age" class="sp-sv"></div></div>
+        <div class="sp-stat"><div class="sp-sl">Role</div><div id="lv-role" class="sp-sv" style="font-size:14px;padding-top:2px"></div></div>
+        <div class="sp-stat"><div class="sp-sl">Base Price</div><div id="lv-price" class="sp-sv" style="font-size:16px"></div></div>
+      </div>
+
+      <!-- Live Bidding info -->
+      <div id="lv-bid-box" style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:1.2rem;margin-bottom:1.5rem;max-width:420px;display:flex;flex-direction:column;align-items:center;text-align:center;width:100%">
+        <div id="lv-bid-val" class="lv-bid male" style="font-size:48px;margin:0;line-height:1.1"></div>
+        <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:2px">Current Bid</div>
+        <div id="lv-bid-team" style="font-size:18px;font-weight:600;color:var(--text);margin-top:10px"></div>
+      </div>
+
+      <!-- Stats info -->
+      <div class="lv-stats" id="lvStats" style="margin-top:auto;max-width:420px;width:100%"></div>
+    </div>
   </div>
 </div>
 
@@ -418,7 +492,18 @@ tr:hover td{background:rgba(255,255,255,0.02)}
       <div class="fr"><label>Role</label><select id="pRole"><option>Batsmen</option><option>Bowler</option><option>All-rounder</option></select></div>
     </div>
     <div class="fr"><label>Custom Base Price (₹) — 0 = rule default</label><input id="pBase" type="number" value="0"></div>
-    <div class="fr"><label>Photo URL</label><input id="pPhoto" placeholder="https://"></div>
+    <div class="fr">
+      <label>Player Photo</label>
+      <div id="pPhotoPreviewWrap" style="display:none;margin-bottom:8px;position:relative;width:80px;height:80px">
+        <img id="pPhotoPreview" src="" style="width:80px;height:80px;object-fit:cover;border-radius:8px;border:1px solid var(--border2)">
+        <button type="button" onclick="removePlayerPhotoPreview()" style="position:absolute;top:-6px;right:-6px;background:#ef4444;border:none;border-radius:50%;width:18px;height:18px;cursor:pointer;color:#fff;font-size:11px;line-height:18px;text-align:center;padding:0">✕</button>
+      </div>
+      <label for="pPhotoFile" style="display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border:1px dashed var(--border2);border-radius:var(--radius);cursor:pointer;font-size:12px;color:var(--muted);transition:all .15s" id="pPhotoFileLabel">
+        📷 Choose photo from device
+      </label>
+      <input type="file" id="pPhotoFile" accept="image/*" style="display:none" onchange="previewPlayerPhoto(this)">
+      <input type="hidden" id="pPhoto">
+    </div>
     <div class="fr" style="display:flex;align-items:center;gap:10px;background:rgba(245,158,11,0.06);padding:10px 12px;border-radius:var(--radius);border:1px solid rgba(245,158,11,0.15)">
       <input type="checkbox" id="pIcon" style="width:16px;height:16px;cursor:pointer;accent-color:var(--gold)">
       <label for="pIcon" style="font-size:13px;font-weight:500;color:var(--text);cursor:pointer;margin:0">⭐ Icon Player</label>
@@ -461,7 +546,8 @@ tr:hover td{background:rgba(255,255,255,0.02)}
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCcnwWCrx74Z_HSZaO5d3r8nkuzqX0Y8HU",
@@ -475,6 +561,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+const storage = getStorage(app);
 
 // ═══════════════════════════════════════════════════════
 // DATA DEFINITIONS
@@ -913,25 +1000,98 @@ function renderAuction(){
 }
 
 function renderLiveView(){
-  const lv=document.getElementById('lvContent'),ls=document.getElementById('lvStats'); if(!lv||!ls)return;
+  const inner=document.getElementById('lv-inner'); if(!inner)return;
   const sold=getSold(),unsold=getUnsold(),spent=sold.reduce((s,p)=>s+(p.soldPrice||0),0);
-  ls.innerHTML=`<div class="mc"><div class="mc-l">Remaining</div><div class="mc-v">${unsold.length}</div></div>
-    <div class="mc"><div class="mc-l">Sold</div><div class="mc-v" style="color:var(--green)">${sold.length}</div></div>
-    <div class="mc"><div class="mc-l">Total Spent</div><div class="mc-v" style="font-size:14px;color:${accentColor()}">${fmt(spent)}</div></div>`;
+  
+  // Render bottom stats
+  const ls=document.getElementById('lvStats');
+  if(ls){
+    ls.innerHTML=`<div class="mc"><div class="mc-l">Remaining</div><div class="mc-v">${unsold.length}</div></div>
+      <div class="mc"><div class="mc-l">Sold</div><div class="mc-v" style="color:var(--green)">${sold.length}</div></div>
+      <div class="mc"><div class="mc-l">Total Spent</div><div class="mc-v" style="font-size:14px;color:${accentColor()}">${fmt(spent)}</div></div>`;
+  }
+  
+  // Set card theme
+  inner.className=gender==='female'?'sp-card female-card':'sp-card male-card';
+  
+  // Update Live Auction title dot
+  const dot=document.getElementById('lvDot2');
+  if(dot){
+    dot.className=`lv-dot ${gender}`;
+  }
+  const title=document.getElementById('lvTitle');
+  if(title){
+    title.textContent=gender==='female'?"Women's Live Auction":"Men's Live Auction";
+  }
+
   const as=S().auctionState;
   const p=as.currentId?S().players.find(x=>x.id===as.currentId):null;
-  if(!p){lv.innerHTML='<div class="lv-name" style="font-size:22px;margin-top:2rem;color:var(--muted)">Waiting for next draw...</div>';return}
-  const bid=as.bid||effBase(p),selT=S().teams.find(t=>t.id===as.sel);
-  const accentC=p.icon?'var(--gold)':(gender==='female'?'var(--female)':'var(--accent)');
-  const photoHtml=p.photo
-    ?`<div style="display:flex;justify-content:center;margin-bottom:1rem"><img src="${p.photo}" alt="${p.name}" style="width:150px;height:150px;object-fit:cover;border-radius:50%;border:3px solid ${accentC};box-shadow:0 0 30px ${accentC}55" onerror="this.style.display='none'"></div>`
-    :'';
-  lv.innerHTML=`${photoHtml}<div style="margin-bottom:.75rem">${roleBadge(p.role)}${p.icon?'&nbsp;<span class="badge b-gold">⭐ Icon</span>':''}</div>
-    <div class="lv-name">${p.name}</div>
-    <div style="font-size:14px;color:var(--muted);margin-bottom:1.5rem">Age ${p.age} &nbsp;·&nbsp; #${p.id} &nbsp;·&nbsp; Max: ${fmt(effMax(p))}</div>
-    <div class="lv-bid ${gender}" style="${p.icon?'color:var(--gold)':''}">${fmt(bid)}</div>
-    <div style="font-size:13px;color:var(--muted);margin-bottom:1.5rem">Current Bid &nbsp;·&nbsp; Base: ${fmt(effBase(p))}</div>
-    ${selT?`<div style="font-size:20px;font-weight:600;color:var(--text)">${selT.name}</div><div style="font-size:13px;color:#86efac;background:rgba(34,197,94,0.1);padding:.5rem 1.5rem;border-radius:20px;display:inline-block;margin-top:.75rem;font-weight:500">Leading Bid</div>`:'<div style="font-size:13px;color:#fca5a5;background:rgba(239,68,68,0.1);padding:.5rem 1.5rem;border-radius:20px;display:inline-block">No bid yet</div>'}`;
+  
+  const lvPhoto=document.getElementById('lv-photo');
+  const lvPhotoFb=document.getElementById('lv-photo-fb');
+  const bidBox=document.getElementById('lv-bid-box');
+  
+  if(!p){
+    // No active player
+    if(inner) inner.className=`sp-card ${gender}-card`;
+    document.getElementById('lv-lbl').textContent='Live Auction';
+    document.getElementById('lv-lbl').className='sp-lbl '+gender;
+    document.getElementById('lv-name').textContent='Waiting for next draw...';
+    document.getElementById('lv-sub').textContent='Sanderao Premier League Season 6';
+    document.getElementById('lv-sub').className='sp-sub '+gender;
+    document.getElementById('lv-badges').innerHTML='';
+    document.getElementById('lv-age').textContent='—';
+    document.getElementById('lv-role').textContent='—';
+    document.getElementById('lv-price').textContent='—';
+    
+    if(bidBox) bidBox.style.display='none';
+    if(lvPhoto && lvPhotoFb){
+      lvPhoto.style.display='none';
+      lvPhotoFb.style.display='flex';
+      lvPhotoFb.textContent='🏏';
+    }
+    return;
+  }
+  
+  // If active player, change card class to icon-card if they are an icon
+  if(p.icon) {
+    inner.className='sp-card icon-card';
+  }
+  
+  document.getElementById('lv-lbl').textContent=p.icon?'⭐ Icon Player':'Now Up For Auction';
+  document.getElementById('lv-lbl').className=p.icon?'sp-lbl':'sp-lbl '+gender;
+  document.getElementById('lv-name').textContent=p.name;
+  document.getElementById('lv-sub').textContent='Player #'+p.id;
+  document.getElementById('lv-sub').className='sp-sub '+gender;
+  document.getElementById('lv-age').textContent=p.age;
+  document.getElementById('lv-role').textContent=p.role;
+  document.getElementById('lv-price').textContent=fmt(effBase(p));
+  
+  const bc=p.role==='Batsmen'?(gender==='male'?'sp-bat-m':'sp-bat-f'):p.role==='Bowler'?'sp-bowl':'sp-all';
+  document.getElementById('lv-badges').innerHTML=`<span class="sp-badge ${bc}">${p.role}</span>${p.icon?'&nbsp;<span class="sp-badge sp-icon-b">\u2b50 Icon</span>':''}`;
+  
+  // Photo loading using helper
+  if(lvPhoto && lvPhotoFb){
+    displayPlayerPhoto(p, lvPhoto, lvPhotoFb);
+  }
+  
+  // Bidding info
+  if(bidBox){
+    bidBox.style.display='flex';
+    const bid=as.bid||effBase(p);
+    const selT=S().teams.find(t=>t.id===as.sel);
+    
+    const bidValEl=document.getElementById('lv-bid-val');
+    bidValEl.textContent=fmt(bid);
+    bidValEl.style.color=p.icon?'var(--gold)':(gender==='female'?'var(--f-accent2)':'var(--m-accent2)');
+    
+    const bidTeamEl=document.getElementById('lv-bid-team');
+    if(selT){
+      bidTeamEl.innerHTML=`<span style="color:#86efac;background:rgba(34,197,94,0.1);padding:4px 12px;border-radius:20px;font-size:12px;font-weight:500;margin-right:8px;vertical-align:middle">Leading</span> ${selT.name}`;
+    } else {
+      bidTeamEl.innerHTML='<span style="color:#fca5a5;background:rgba(239,68,68,0.1);padding:4px 12px;border-radius:20px;font-size:12px;vertical-align:middle">No bids yet</span>';
+    }
+  }
 }
 
 // ═══════════════════════════════════════════════════════
@@ -948,7 +1108,7 @@ window.drawPlayer = ()=>{
   const as=S().auctionState;
   as.currentId=id; as.bid=effBase(p); as.sel=null;
   if(!as.drawn.includes(id))as.drawn.push(id);
-  saveToFirestore(); showSpotlight(id); renderAuction(); renderLiveView();
+  saveToFirestore(); renderAuction(); renderLiveView();
 };
 window.adjBid = (d)=>{
   if(!isAdmin)return;
@@ -1041,18 +1201,12 @@ window.showSpotlight = (id)=>{
   document.getElementById('sp-price').textContent=fmt(effBase(p));
   const bc=p.role==='Batsmen'?(gender==='male'?'sp-bat-m':'sp-bat-f'):p.role==='Bowler'?'sp-bowl':'sp-all';
   document.getElementById('sp-badges').innerHTML=`<span class="sp-badge ${bc}">${p.role}</span>${p.icon?'&nbsp;<span class="sp-badge sp-icon-b">\u2b50 Icon</span>':''}`;
+  
   // Photo
   const spPhoto=document.getElementById('sp-photo');
   const spFb=document.getElementById('sp-photo-fb');
-  if(p.photo){
-    spPhoto.src=p.photo;
-    spPhoto.style.display='block';
-    spFb.style.display='none';
-    spPhoto.style.borderColor=p.icon?'var(--gold)':(gender==='female'?'var(--female)':'var(--accent)');
-  } else {
-    spPhoto.style.display='none';
-    spFb.style.display='flex';
-  }
+  displayPlayerPhoto(p, spPhoto, spFb);
+
   document.getElementById('spotlight').classList.add('on');
 };
 window.closeSpotlight = ()=>document.getElementById('spotlight').classList.remove('on');
@@ -1076,30 +1230,143 @@ window.unsellPlayer = async(id)=>{
 window.openAddPlayer = ()=>{
   if(!isAdmin)return;
   document.getElementById('playerModalTitle').textContent='Add Player';
-  ['pName','pAge','pPhoto'].forEach(id=>document.getElementById(id).value='');
+  ['pName','pAge'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('pPhoto').value='';
+  document.getElementById('pPhotoFile').value='';
+  document.getElementById('pPhotoPreviewWrap').style.display='none';
+  document.getElementById('pPhotoPreview').src='';
+  document.getElementById('pPhotoFileLabel').textContent='📷 Choose photo from device';
   document.getElementById('pBase').value='0'; document.getElementById('pIcon').checked=false; document.getElementById('pEditId').value='';
   document.getElementById('addPlayerModal').classList.add('open');
 };
-window.editPlayer = (id)=>{
+window.editPlayer = async(id)=>{
   if(!isAdmin)return;
   const p=S().players.find(x=>x.id===id);
   document.getElementById('playerModalTitle').textContent='Edit — '+p.name;
   document.getElementById('pName').value=p.name; document.getElementById('pAge').value=p.age;
   document.getElementById('pPhoto').value=p.photo||'';
+  document.getElementById('pPhotoFile').value='';
+  // Load existing photo from Firestore for preview
+  if(p.photo==='stored'){
+    const dataUrl=await loadPhotoFromFirestore(p.id,gender);
+    if(dataUrl){
+      document.getElementById('pPhotoPreview').src=dataUrl;
+      document.getElementById('pPhotoPreviewWrap').style.display='block';
+      document.getElementById('pPhotoFileLabel').textContent='📷 Change photo';
+    } else {
+      document.getElementById('pPhotoPreviewWrap').style.display='none';
+      document.getElementById('pPhotoFileLabel').textContent='📷 Choose photo from device';
+    }
+  } else if(p.photo){
+    document.getElementById('pPhotoPreview').src=p.photo;
+    document.getElementById('pPhotoPreviewWrap').style.display='block';
+    document.getElementById('pPhotoFileLabel').textContent='📷 Change photo';
+  } else {
+    document.getElementById('pPhotoPreviewWrap').style.display='none';
+    document.getElementById('pPhotoPreview').src='';
+    document.getElementById('pPhotoFileLabel').textContent='📷 Choose photo from device';
+  }
   document.getElementById('pRole').value=p.role; document.getElementById('pBase').value=p.basePrice||0;
   document.getElementById('pIcon').checked=!!p.icon; document.getElementById('pEditId').value=p.id;
   document.getElementById('addPlayerModal').classList.add('open');
 };
-window.savePlayer = async()=>{
+// ── Photo helpers ──
+// Compress image via canvas and return base64 data URL
+function compressImage(file,maxW=700,maxH=1000,quality=0.78){
+  return new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onerror=()=>reject(new Error('File reading failed'));
+    reader.onload=e=>{
+      const img=new Image();
+      img.onerror=()=>reject(new Error('Image loading failed'));
+      img.onload=()=>{
+        let w=img.width,h=img.height;
+        if(w>maxW){h=Math.round(h*maxW/w);w=maxW;}
+        if(h>maxH){w=Math.round(w*maxH/h);h=maxH;}
+        const canvas=document.createElement('canvas');
+        canvas.width=w;canvas.height=h;
+        canvas.getContext('2d').drawImage(img,0,0,w,h);
+        resolve(canvas.toDataURL('image/jpeg',quality));
+      };
+      img.src=e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+// Save compressed photo to Firestore separate collection
+async function savePhotoToFirestore(pid,g,dataUrl){
+  await setDoc(doc(db,'playerPhotos',`${g}_${pid}`),{dataUrl});
+}
+// Load photo from Firestore
+async function loadPhotoFromFirestore(pid,g){
+  try{
+    const snap=await getDoc(doc(db,'playerPhotos',`${g}_${pid}`));
+    return snap.exists()?snap.data().dataUrl:null;
+  }catch{return null;}
+}
+// Display player photo helper supporting base64 stored in Firestore
+async function displayPlayerPhoto(p, imgEl, fbEl) {
+  if (!p || !p.photo) {
+    imgEl.style.display = 'none';
+    fbEl.style.display = 'flex';
+    fbEl.textContent = gender === 'female' ? '👩' : '🧑';
+    return;
+  }
+  if (p.photo === 'stored') {
+    imgEl.style.display = 'none';
+    fbEl.style.display = 'flex';
+    fbEl.textContent = '⏳';
+    const dataUrl = await loadPhotoFromFirestore(p.id, gender);
+    if (dataUrl) {
+      imgEl.src = dataUrl;
+      imgEl.style.display = 'block';
+      fbEl.style.display = 'none';
+    } else {
+      fbEl.textContent = gender === 'female' ? '👩' : '🧑';
+    }
+  } else {
+    imgEl.src = p.photo;
+    imgEl.style.display = 'block';
+    fbEl.style.display = 'none';
+  }
+}
+window.previewPlayerPhoto=(input)=>{
+  const file=input.files[0];if(!file)return;
+  const url=URL.createObjectURL(file);
+  document.getElementById('pPhotoPreview').src=url;
+  document.getElementById('pPhotoPreviewWrap').style.display='block';
+  document.getElementById('pPhotoFileLabel').textContent='📷 Change photo';
+  document.getElementById('pPhoto').value=''; // clear marker so save knows to upload
+};
+window.removePlayerPhotoPreview=()=>{
+  document.getElementById('pPhoto').value='__remove__';
+  document.getElementById('pPhotoFile').value='';
+  document.getElementById('pPhotoPreview').src='';
+  document.getElementById('pPhotoPreviewWrap').style.display='none';
+  document.getElementById('pPhotoFileLabel').textContent='📷 Choose photo from device';
+};
+window.savePlayer=async()=>{
   if(!isAdmin)return;
   const name=document.getElementById('pName').value.trim(),age=parseInt(document.getElementById('pAge').value)||0;
-  const photo=document.getElementById('pPhoto').value.trim();
   const role=document.getElementById('pRole').value,base=parseInt(document.getElementById('pBase').value)||0;
   const icon=document.getElementById('pIcon').checked,eid=parseInt(document.getElementById('pEditId').value)||0;
   if(!name){showMsg('Enter player name','err');return}
+  let photo=document.getElementById('pPhoto').value.trim();
+  if(photo==='__remove__')photo='';
+  const fileInput=document.getElementById('pPhotoFile');
+  const file=fileInput&&fileInput.files&&fileInput.files[0];
+  if(file){
+    showMsg('Compressing and saving photo...','ok');
+    try{
+      const pid=eid||(S().players.reduce((m,p)=>Math.max(m,p.id),0)+1);
+      const dataUrl=await compressImage(file);
+      await savePhotoToFirestore(pid,gender,dataUrl);
+      photo='stored'; // marker: photo is in Firestore playerPhotos collection
+    }catch(e){showMsg('Photo save failed: '+e.message,'err');return;}
+  }
   if(eid){const i=S().players.findIndex(p=>p.id===eid);S().players[i]={...S().players[i],name,age,photo,role,basePrice:base,icon}}
   else{const mx=S().players.reduce((m,p)=>Math.max(m,p.id),0);S().players.push({id:mx+1,name,age,photo,role,icon,basePrice:base,soldPrice:null,team:null})}
-  await saveToFirestore(); closeModal('addPlayerModal'); showMsg(eid?'Updated!':'Player added!','ok'); renderAll();
+  await saveToFirestore();closeModal('addPlayerModal');showMsg(eid?'Updated!':'Player added!','ok');renderAll();
 };
 window.quickSell = (id)=>{
   if(!isAdmin)return;
@@ -1181,13 +1448,28 @@ window.deleteTeam = async(id)=>{
 // ═══════════════════════════════════════════════════════
 window.hardReset = async()=>{
   if(!isAdmin)return;
-  const def=DEF();
-  STATE[gender].players=makeDefaultPlayers(def);
-  STATE[gender].teams=JSON.parse(JSON.stringify(def.teams));
-  STATE[gender].rules={...def.rules};
-  STATE[gender].auctionState={currentId:null,bid:0,sel:null,drawn:[]};
-  STATE[gender].sqTab=0;
-  await saveToFirestore(); syncRuleInputs(); renderAll(); showMsg('Reset done!','ok');
+  
+  // 1. Reset auction status for all players but preserve custom profiles (names, roles, custom base prices, photos, icon status)
+  S().players.forEach(p => {
+    p.soldPrice = null;
+    p.team = null;
+  });
+  
+  // 2. Reset teams back to rules-defined starting budget and clear topup counts, preserving team profiles
+  const startBudget = S().rules.startBudget || 1000000;
+  S().teams.forEach(t => {
+    t.budget = startBudget;
+    t.topupCount = 0;
+  });
+  
+  // 3. Reset active auction state
+  STATE[gender].auctionState = {currentId:null,bid:0,sel:null,drawn:[]};
+  STATE[gender].sqTab = 0;
+  
+  await saveToFirestore();
+  syncRuleInputs();
+  renderAll();
+  showMsg('Reset done! Auction state cleared, player photos & details preserved.','ok');
 };
 window.exportData = ()=>{
   const rows=[['ID','Name','Age','Icon','Role','Base','Sold Price','Team']];

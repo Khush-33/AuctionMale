@@ -11,5 +11,12 @@ service cloud.firestore {
       allow write: if request.auth != null
                    && request.auth.token.email == 'khushjain8419@gmail.com';
     }
+
+    // Player Photos: anyone can READ, only authenticated admin can WRITE
+    match /playerPhotos/{document=**} {
+      allow read: if true;
+      allow write: if request.auth != null
+                   && request.auth.token.email == 'khushjain8419@gmail.com';
+    }
   }
 }
