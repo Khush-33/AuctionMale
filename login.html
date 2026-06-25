@@ -261,6 +261,7 @@
     btn.innerHTML = '<span class="spinner"></span>Signing in...';
 
     try {
+      await auth.signOut(); // clear any Google session
       await signInWithEmailAndPassword(auth, email, pwd);
       window.location.href = 'index.html?admin=1';
     } catch(e) {
