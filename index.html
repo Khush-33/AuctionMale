@@ -418,6 +418,7 @@ tr:hover td{background:rgba(255,255,255,0.02)}
       <div class="fr"><label>Role</label><select id="pRole"><option>Batsmen</option><option>Bowler</option><option>All-rounder</option></select></div>
     </div>
     <div class="fr"><label>Custom Base Price (₹) — 0 = rule default</label><input id="pBase" type="number" value="0"></div>
+    <div class="fr"><label>Photo URL</label><input id="pPhoto" placeholder="https://"></div>
     <div class="fr" style="display:flex;align-items:center;gap:10px;background:rgba(245,158,11,0.06);padding:10px 12px;border-radius:var(--radius);border:1px solid rgba(245,158,11,0.15)">
       <input type="checkbox" id="pIcon" style="width:16px;height:16px;cursor:pointer;accent-color:var(--gold)">
       <label for="pIcon" style="font-size:13px;font-weight:500;color:var(--text);cursor:pointer;margin:0">⭐ Icon Player</label>
@@ -501,9 +502,7 @@ const MALE_DEFAULTS = {
 const FEMALE_DEFAULTS = {
   rules:{normalBase:50000,iconBase:200000,startBudget:1000000,maxNormal:300000,maxIcon:600000,topupAmt:100000},
   teams:[
-    {id:1,name:"Urban Lillies",owner:"",budget:1000000,topupUsed:false},
-    {id:2,name:"Siroya Strikers",owner:"",budget:1000000,topupUsed:false},
-    {id:3,name:"Royal Divas VII",owner:"",budget:1000000,topupUsed:false}
+    {id:1,name:"Sanderao queens",owner:"",budget:1000000,topupUsed:false}
   ],
   playerNames:["Jikita Mehta","Dr. Disha Bhandari","Manisha Palrecha","Sonal palrecha","Dhruvi jain","LAVEENA PRATIK PALRECHA","Tani P palrecha","Kejal Mayuresh Palresha","Nishi Oswal","Akshi Solanki","Nikki Solanki","Heena Parmar","Dr. Minal","Ridhvi Parmar","Rinku Oswal","Kashish jain","Moksha Jitendra Kering","Kashish sethiya","Priya Pratik Modi","Manisha Modi","Kanishka"],
   playerAges:[41,28,45,45,22,18,15,29,24,23,46,19,28,21,40,25,17,17,35,49,23],
@@ -1077,7 +1076,7 @@ window.unsellPlayer = async(id)=>{
 window.openAddPlayer = ()=>{
   if(!isAdmin)return;
   document.getElementById('playerModalTitle').textContent='Add Player';
-  ['pName','pAge'].forEach(id=>document.getElementById(id).value='');
+  ['pName','pAge','pPhoto'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('pBase').value='0'; document.getElementById('pIcon').checked=false; document.getElementById('pEditId').value='';
   document.getElementById('addPlayerModal').classList.add('open');
 };
@@ -1086,6 +1085,7 @@ window.editPlayer = (id)=>{
   const p=S().players.find(x=>x.id===id);
   document.getElementById('playerModalTitle').textContent='Edit — '+p.name;
   document.getElementById('pName').value=p.name; document.getElementById('pAge').value=p.age;
+  document.getElementById('pPhoto').value=p.photo||'';
   document.getElementById('pRole').value=p.role; document.getElementById('pBase').value=p.basePrice||0;
   document.getElementById('pIcon').checked=!!p.icon; document.getElementById('pEditId').value=p.id;
   document.getElementById('addPlayerModal').classList.add('open');
@@ -1093,11 +1093,12 @@ window.editPlayer = (id)=>{
 window.savePlayer = async()=>{
   if(!isAdmin)return;
   const name=document.getElementById('pName').value.trim(),age=parseInt(document.getElementById('pAge').value)||0;
+  const photo=document.getElementById('pPhoto').value.trim();
   const role=document.getElementById('pRole').value,base=parseInt(document.getElementById('pBase').value)||0;
   const icon=document.getElementById('pIcon').checked,eid=parseInt(document.getElementById('pEditId').value)||0;
   if(!name){showMsg('Enter player name','err');return}
-  if(eid){const i=S().players.findIndex(p=>p.id===eid);S().players[i]={...S().players[i],name,age,role,basePrice:base,icon}}
-  else{const mx=S().players.reduce((m,p)=>Math.max(m,p.id),0);S().players.push({id:mx+1,name,age,role,icon,basePrice:base,soldPrice:null,team:null})}
+  if(eid){const i=S().players.findIndex(p=>p.id===eid);S().players[i]={...S().players[i],name,age,photo,role,basePrice:base,icon}}
+  else{const mx=S().players.reduce((m,p)=>Math.max(m,p.id),0);S().players.push({id:mx+1,name,age,photo,role,icon,basePrice:base,soldPrice:null,team:null})}
   await saveToFirestore(); closeModal('addPlayerModal'); showMsg(eid?'Updated!':'Player added!','ok'); renderAll();
 };
 window.quickSell = (id)=>{
