@@ -307,7 +307,7 @@ tr:hover td{background:rgba(255,255,255,0.02)}
         </div>
         <div style="display:flex;align-items:center;gap:8px;padding:7px 12px;background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.2);border-radius:var(--radius);cursor:pointer" onclick="document.getElementById('calcIsIcon').click()">
           <input type="checkbox" id="calcIsIcon" onchange="calcMaxBid()" style="width:15px;height:15px;cursor:pointer;accent-color:var(--gold)">
-          <label for="calcIsIcon" style="font-size:12px;color:var(--gold);cursor:pointer;font-weight:500;white-space:nowrap">⭐ Icon Player (cap ₹5L)</label>
+          <label for="calcIsIcon" style="font-size:12px;color:var(--gold);cursor:pointer;font-weight:500;white-space:nowrap">⭐ Icon Player (cap ₹2K)</label>
         </div>
       </div>
       <div id="calcResult" style="margin-top:14px;display:none">
@@ -519,7 +519,7 @@ tr:hover td{background:rgba(255,255,255,0.02)}
     <h3 id="teamModalTitle">Add Team</h3>
     <div class="fr"><label>Team Name *</label><input id="tName" placeholder="e.g. RB Challengers"></div>
     <div class="fr"><label>Owner / Captain</label><input id="tOwner" placeholder="Owner name"></div>
-    <div class="fr"><label>Starting Budget (₹)</label><input id="tBudget" type="number" value="1000000"></div>
+    <div class="fr"><label>Starting Budget (₹)</label><input id="tBudget" type="number" value="8000"></div>
     <input type="hidden" id="tEditId">
     <div class="mbtns"><button class="btn btn-p" onclick="saveTeam()">Save Team</button><button class="btn" onclick="closeModal('addTeamModal')">Cancel</button></div>
   </div>
@@ -567,16 +567,16 @@ const storage = getStorage(app);
 // DATA DEFINITIONS
 // ═══════════════════════════════════════════════════════
 const MALE_DEFAULTS = {
-  rules:{normalBase:50000,iconBase:200000,startBudget:1000000,maxNormal:300000,maxIcon:600000,topupAmt:100000},
+  rules:{normalBase:100,iconBase:200,startBudget:8000,maxNormal:1000,maxIcon:2000,topupAmt:1000},
   teams:[
-    {id:1,name:"Rajesh Bokadiya",owner:"Rajesh Bokadiya",budget:1000000,topupUsed:false},
-    {id:2,name:"Santosh Oswal",owner:"Santosh Oswal",budget:1000000,topupUsed:false},
-    {id:3,name:"Vikesh Mehta",owner:"Vikesh Mehta",budget:1000000,topupUsed:false},
-    {id:4,name:"Bharat Mandot",owner:"Bharat Mandot",budget:1000000,topupUsed:false},
-    {id:5,name:"Kalpesh Mehta",owner:"Kalpesh Mehta",budget:1000000,topupUsed:false},
-    {id:6,name:"Manish Dhoka",owner:"Manish Dhoka",budget:1000000,topupUsed:false},
-    {id:7,name:"Kevalbhai Modi",owner:"Kevalbhai Modi",budget:1000000,topupUsed:false},
-    {id:8,name:"Jitubhai Kering",owner:"Jitubhai Kering",budget:1000000,topupUsed:false}
+    {id:1,name:"Rajesh Bokadiya",owner:"Rajesh Bokadiya",budget:8000,topupUsed:false},
+    {id:2,name:"Santosh Oswal",owner:"Santosh Oswal",budget:8000,topupUsed:false},
+    {id:3,name:"Vikesh Mehta",owner:"Vikesh Mehta",budget:8000,topupUsed:false},
+    {id:4,name:"Bharat Mandot",owner:"Bharat Mandot",budget:8000,topupUsed:false},
+    {id:5,name:"Kalpesh Mehta",owner:"Kalpesh Mehta",budget:8000,topupUsed:false},
+    {id:6,name:"Manish Dhoka",owner:"Manish Dhoka",budget:8000,topupUsed:false},
+    {id:7,name:"Kevalbhai Modi",owner:"Kevalbhai Modi",budget:8000,topupUsed:false},
+    {id:8,name:"Jitubhai Kering",owner:"Jitubhai Kering",budget:8000,topupUsed:false}
   ],
   playerNames:["Rajesh Dhoka","Harsh Mehta","Moksh jain","HITESH MEHTA","Lavesh Jain","Jainam Mehta","Ajay Kering","Mehul Parmar","Yash Mehta","Rajesh Bokdiya","Nitin s Dhoka","Aarav Bokdiya","Prashant Jain","Khush Jain","Shreyans Jain","Nitin jain","Gaurav Palresha","Kamlesh Parmar","Jitesh Oswal","Hardik Oswal","Ronak Jain","Dhruv jain","Pratik B Palrecha","Harsshh Parmar","Ankit R. Dhoka","Jatin Punmiya","Punit Palresha","Bhavesh Dhoka","Daksh Mandot","Jignesh Mandot","GIRISH","Rahul Solanki","BHARAT","Santosh oswal","Amit Palresa","Yash Oswal","Niven Mehta","Likhit Modi","Nivesh Modi","Mayuresh Palresha","Sunil c mandot","Harshad jain","Gautam Mehta","Ketan  Parmar","Mahavir Palresha","Nimish Mehta","Sundeep Punmiya","Pritesh","Yash Parmar","Nitesh Palresa","Milind Mehta","Rajesh Parmar","Palaksh Parmar","Kalpesh Mehta","Pratham Palresha","Satish Parmar","Sayam Parmar","Jitendra Kering","Pranav Oswal","Pravin K Palresha","Nirav Mandot","Vivaan Palresa","Deepak sethiya","Aashish sethiya","Pravin","Pravin Parmar"],
   playerAges:[50,19,24,41,23,24,37,32,29,50,23,16,46,20,27,55,22,49,41,21,34,20,44,19,33,35,28,38,26,33,38,50,53,48,41,28,16,17,16,29,55,30,36,39,51,24,27,29,25,42,39,50,20,39,23,49,18,44,24,56,38,14,43,17,45,50],
@@ -587,9 +587,9 @@ const MALE_DEFAULTS = {
 };
 
 const FEMALE_DEFAULTS = {
-  rules:{normalBase:50000,iconBase:200000,startBudget:1000000,maxNormal:300000,maxIcon:600000,topupAmt:100000},
+  rules:{normalBase:100,iconBase:200,startBudget:8000,maxNormal:1000,maxIcon:2000,topupAmt:1000},
   teams:[
-    {id:1,name:"Sanderao queens",owner:"",budget:1000000,topupUsed:false}
+    {id:1,name:"Sanderao queens",owner:"",budget:8000,topupUsed:false}
   ],
   playerNames:["Jikita Mehta","Dr. Disha Bhandari","Manisha Palrecha","Sonal palrecha","Dhruvi jain","LAVEENA PRATIK PALRECHA","Tani P palrecha","Kejal Mayuresh Palresha","Nishi Oswal","Akshi Solanki","Nikki Solanki","Heena Parmar","Dr. Minal","Ridhvi Parmar","Rinku Oswal","Kashish jain","Moksha Jitendra Kering","Kashish sethiya","Priya Pratik Modi","Manisha Modi","Kanishka"],
   playerAges:[41,28,45,45,22,18,15,29,24,23,46,19,28,21,40,25,17,17,35,49,23],
@@ -796,12 +796,12 @@ function syncRuleInputs(){
 window.saveRules = async()=>{
   if(!isAdmin){showMsg('Admin only','err');return}
   const r=S().rules;
-  r.normalBase =parseInt(document.getElementById('ru-normal').value)||50000;
-  r.iconBase   =parseInt(document.getElementById('ru-icon').value)||200000;
-  r.startBudget=parseInt(document.getElementById('ru-budget').value)||1000000;
-  r.maxNormal  =parseInt(document.getElementById('ru-maxnormal').value)||300000;
-  r.maxIcon    =parseInt(document.getElementById('ru-maxicon').value)||600000;
-  r.topupAmt   =parseInt(document.getElementById('ru-topup').value)||100000;
+  r.normalBase =parseInt(document.getElementById('ru-normal').value)||100;
+  r.iconBase   =parseInt(document.getElementById('ru-icon').value)||200;
+  r.startBudget=parseInt(document.getElementById('ru-budget').value)||8000;
+  r.maxNormal  =parseInt(document.getElementById('ru-maxnormal').value)||1000;
+  r.maxIcon    =parseInt(document.getElementById('ru-maxicon').value)||2000;
+  r.topupAmt   =parseInt(document.getElementById('ru-topup').value)||1000;
   await saveToFirestore(); showMsg('Rules saved!','ok'); renderAll();
 };
 
@@ -976,12 +976,12 @@ function renderAuction(){
       <div class="cbid" style="color:${p.icon?'var(--gold)':accentColor()}">${fmt(bid)}</div>
       <div style="font-size:12px;color:var(--muted);margin-bottom:.5rem">Current Bid &nbsp;·&nbsp; Base: ${fmt(effBase(p))}</div>
       <div class="bidrow">
-        <button class="btn" onclick="adjBid(-5000)">−₹5K</button>
-        <button class="btn" onclick="adjBid(-10000)">−₹10K</button>
-        <button class="btn btn-p" onclick="adjBid(5000)">+₹5K</button>
-        <button class="btn btn-p" onclick="adjBid(10000)">+₹10K</button>
-        <button class="btn btn-p" onclick="adjBid(25000)">+₹25K</button>
-        <button class="btn btn-p" onclick="adjBid(50000)">+₹50K</button>
+        <button class="btn" onclick="adjBid(-100)">−₹100</button>
+        <button class="btn" onclick="adjBid(-200)">−₹200</button>
+        <button class="btn btn-p" onclick="adjBid(100)">+₹100</button>
+        <button class="btn btn-p" onclick="adjBid(200)">+₹200</button>
+        <button class="btn btn-p" onclick="adjBid(500)">+₹500</button>
+        <button class="btn btn-p" onclick="adjBid(1000)">+₹1000</button>
       </div>
       ${bid>=maxBid?`<div style="margin-top:8px;font-size:12px;color:var(--red)">Max bid of ${fmt(maxBid)} reached!</div>`:''}
     </div>
@@ -1176,12 +1176,12 @@ window.calcMaxBid = ()=>{
   document.getElementById('calcReserve').textContent=fmt(Math.max(0,reserve));
   document.getElementById('calcMaxBidVal').textContent=capped>0?fmt(capped):'₹0 (Budget too low!)';
   document.getElementById('calcMaxBidVal').style.color=capped<=0?'var(--red)':accentColor();
-  const capLabel=isIcon?'₹5L icon cap':'₹3L normal cap';
+  const capLabel=isIcon?'₹2K icon cap':'₹1K normal cap';
   document.getElementById('calcNote').textContent=capped<=0
-    ?`⚠️ Cannot afford! Budget ₹${(rem/100000).toFixed(1)}L with ${playersLeft-1} more player(s) still needed.`
+    ?`⚠️ Cannot afford! Budget ${fmt(rem)} with ${playersLeft-1} more player(s) still needed.`
     :capped>=capLimit
     ?`✅ Capped at ${fmt(capLimit)} (${capLabel}). ${fmt(reserve)} reserved for ${playersLeft-1} more player(s). Team has ${alreadyHave}/${DEF().squadSize} players.`
-    :`✅ Max safe bid: ${fmt(capped)}. ${fmt(reserve)} reserved for ${playersLeft-1} more player(s) at ₹50K each. Team has ${alreadyHave}/${DEF().squadSize} players.`;
+    :`✅ Max safe bid: ${fmt(capped)}. ${fmt(reserve)} reserved for ${playersLeft-1} more player(s) at ${fmt(S().rules.normalBase)} each. Team has ${alreadyHave}/${DEF().squadSize} players.`;
 };
 
 // ═══════════════════════════════════════════════════════
@@ -1456,7 +1456,7 @@ window.hardReset = async()=>{
   });
   
   // 2. Reset teams back to rules-defined starting budget and clear topup counts, preserving team profiles
-  const startBudget = S().rules.startBudget || 1000000;
+  const startBudget = S().rules.startBudget || 8000;
   S().teams.forEach(t => {
     t.budget = startBudget;
     t.topupCount = 0;
