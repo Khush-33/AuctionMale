@@ -3281,28 +3281,6 @@
           });
         }
 
-        // Helper: fetch an image URL and return a base64 data string (jpeg)
-        async function imgToBase64(url) {
-          return new Promise((resolve) => {
-            const img = new Image();
-            img.crossOrigin = 'anonymous';
-            img.onload = () => {
-              try {
-                const canvas = document.createElement('canvas');
-                canvas.width = img.naturalWidth || 400;
-                canvas.height = img.naturalHeight || 500;
-                const ctx = canvas.getContext('2d');
-                ctx.drawImage(img, 0, 0);
-                // Returns "data:image/jpeg;base64,..." - strip the prefix for pptxgenjs
-                const full = canvas.toDataURL('image/jpeg', 0.85);
-                resolve(full); // keep full data URL
-              } catch(e) { resolve(null); }
-            };
-            img.onerror = () => resolve(null);
-            img.src = url;
-          });
-        }
-
         const pptx = new PptxGenJS();
         pptx.layout = 'LAYOUT_WIDE'; // 13.33" x 7.5"
         const players = S().players;
@@ -3334,19 +3312,14 @@
             line: { color: accentHex, width: 1.5 }
           });
 
-          // Attempt to embed the player photo
-          const photoUrl = p.photo || '';
+          // Attempt to embed the player photo from Firestore (uploaded via Players tab)
           let photoLoaded = false;
-          if (photoUrl) {
-            let fetchUrl = photoUrl;
-            // Rewrite Google Drive view URL to thumbnail URL (more CORS friendly)
-            const idMatch = photoUrl.match(/[?&]id=([^&]+)/);
-            if (idMatch) fetchUrl = `https://lh3.googleusercontent.com/d/${idMatch[1]}=w400`;
-
-            const b64 = await imgToBase64(fetchUrl);
-            if (b64) {
+          if (p.photo === 'stored') {
+            // Photo was uploaded via the Players tab → fetch base64 dataUrl from Firestore
+            const dataUrl = await loadPhotoFromFirestore(p.id, gender);
+            if (dataUrl) {
               slide.addImage({
-                data: b64,
+                data: dataUrl,
                 x: 0.2, y: 0.2, w: 5.0, h: 7.1,
                 sizing: { type: 'contain', w: 5.0, h: 7.1 }
               });
