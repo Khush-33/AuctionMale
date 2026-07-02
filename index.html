@@ -1307,16 +1307,16 @@
 
       /* Live Auction Tab - Main Auction Card (.acard) */
       .acard {
-        height: 65vh !important;
-        /* Stacked card height on mobile */
+        /* Let height be natural – allow scrolling on the page */
         flex-direction: column !important;
         display: flex !important;
       }
 
       .acard-photo-area {
-        flex: 0 0 65% !important;
-        /* 65% photo */
-        height: 65% !important;
+        flex: none !important;
+        width: 100% !important;
+        height: 55vw !important;
+        min-height: 200px !important;
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
@@ -1324,15 +1324,13 @@
       }
 
       .acard-info {
-        flex: 0 0 35% !important;
-        /* 35% details */
-        height: 35% !important;
-        overflow: hidden !important;
-        /* NO SCROLLING! */
-        padding: 0.6rem 0.85rem !important;
+        flex: 1 1 auto !important;
+        height: auto !important;
+        overflow-y: auto !important;
+        /* Allow scrolling inside details if needed */
+        padding: 0.75rem 0.85rem !important;
         display: flex !important;
         flex-direction: column !important;
-        justify-content: space-between !important;
         align-items: center !important;
       }
     }
@@ -1673,6 +1671,7 @@
             style="display:flex;align-items:center;gap:5px;padding:5px 10px"><span class="lv-dot male"
               id="lvDot"></span> Live</button>
           <button class="btn" onclick="exportData()" style="padding:5px 10px">Export</button>
+          <button class="btn" onclick="downloadPPT()" style="padding:5px 10px" title="Download Players PPT">📄 PPT</button>
           <button class="btn btn-d" id="resetBtn" style="display:none;padding:5px 10px"
             onclick="if(confirm('Reset ALL data for this auction?'))hardReset()">Reset</button>
           <button class="btn" id="logoutBtn" style="display:none;padding:5px 10px" onclick="doLogout()">Logout</button>
@@ -2293,8 +2292,8 @@
       if (maleActive || femaleActive) {
         const targetGender = maleActive ? 'male' : 'female';
         if (targetGender !== gender) switchGender(targetGender);
-        const auctionBtn = document.querySelector('.nav button:nth-child(2)');
-        showPage('auction', auctionBtn);
+        // Open the Live View overlay (the "Live" button popup)
+        openLiveView();
       }
     }
 
@@ -2428,17 +2427,11 @@
         if (maleActive && g !== 'male') {
           g = 'male';
           showMsg("Men's Live Auction is currently running!", "ok");
-          setTimeout(() => {
-            const auctionBtn = document.querySelector('.nav button:nth-child(2)');
-            showPage('auction', auctionBtn);
-          }, 0);
+          setTimeout(() => { openLiveView(); }, 0);
         } else if (femaleActive && g !== 'female') {
           g = 'female';
           showMsg("Women's Live Auction is currently running!", "ok");
-          setTimeout(() => {
-            const auctionBtn = document.querySelector('.nav button:nth-child(2)');
-            showPage('auction', auctionBtn);
-          }, 0);
+          setTimeout(() => { openLiveView(); }, 0);
         }
       }
 
@@ -3267,6 +3260,189 @@
 
     // Recalculate sticky offsets on resize
     window.addEventListener('resize', updateStickyOffsets, { passive: true });
+
+    // ═══════════════════════════════════════════════════════
+    // DOWNLOAD PLAYERS PPT
+    // ═══════════════════════════════════════════════════════
+    window.downloadPPT = async function() {
+      const btn = document.querySelector('[onclick="downloadPPT()"]');
+      if (btn) { btn.disabled = true; btn.textContent = '⏳ PPT'; }
+      showMsg('Generating PPT, please wait…', 'ok');
+
+      try {
+        // Load PptxGenJS from CDN if not already loaded
+        if (!window.PptxGenJS) {
+          await new Promise((resolve, reject) => {
+            const s = document.createElement('script');
+            s.src = 'https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js';
+            s.onload = resolve;
+            s.onerror = () => reject(new Error('Failed to load PptxGenJS library'));
+            document.head.appendChild(s);
+          });
+        }
+
+        // Helper: fetch an image URL and return a base64 data string (jpeg)
+        async function imgToBase64(url) {
+          return new Promise((resolve) => {
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            img.onload = () => {
+              try {
+                const canvas = document.createElement('canvas');
+                canvas.width = img.naturalWidth || 400;
+                canvas.height = img.naturalHeight || 500;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0);
+                // Returns "data:image/jpeg;base64,..." - strip the prefix for pptxgenjs
+                const full = canvas.toDataURL('image/jpeg', 0.85);
+                resolve(full); // keep full data URL
+              } catch(e) { resolve(null); }
+            };
+            img.onerror = () => resolve(null);
+            img.src = url;
+          });
+        }
+
+        const pptx = new PptxGenJS();
+        pptx.layout = 'LAYOUT_WIDE'; // 13.33" x 7.5"
+        const players = S().players;
+        const gLabel = gender === 'male' ? "Men's" : "Women's";
+        const accentHex = gender === 'male' ? '3b82f6' : 'c026d3';
+
+        // ── Title slide ──
+        const ts = pptx.addSlide();
+        ts.background = { color: '0a0f1e' };
+        ts.addText(`SPL Season 6 — ${gLabel} Players`, {
+          x: 0.5, y: 2.2, w: 12.33, h: 1.6,
+          fontSize: 48, bold: true, color: 'f1f5f9', fontFace: 'Arial', align: 'center'
+        });
+        ts.addText('Sanderao Premier League', {
+          x: 0.5, y: 3.9, w: 12.33, h: 0.7,
+          fontSize: 22, color: '64748b', fontFace: 'Arial', align: 'center'
+        });
+        ts.addText('🏏', { x: 5.9, y: 1.2, w: 1.5, h: 1, fontSize: 52, align: 'center' });
+
+        // ── One slide per player ──
+        for (const p of players) {
+          const slide = pptx.addSlide();
+          slide.background = { color: '111827' };
+
+          // Left photo background box
+          slide.addShape('rect', {
+            x: 0.2, y: 0.2, w: 5.0, h: 7.1,
+            fill: { color: '0a0f1e' },
+            line: { color: accentHex, width: 1.5 }
+          });
+
+          // Attempt to embed the player photo
+          const photoUrl = p.photo || '';
+          let photoLoaded = false;
+          if (photoUrl) {
+            let fetchUrl = photoUrl;
+            // Rewrite Google Drive view URL to thumbnail URL (more CORS friendly)
+            const idMatch = photoUrl.match(/[?&]id=([^&]+)/);
+            if (idMatch) fetchUrl = `https://lh3.googleusercontent.com/d/${idMatch[1]}=w400`;
+
+            const b64 = await imgToBase64(fetchUrl);
+            if (b64) {
+              slide.addImage({
+                data: b64,
+                x: 0.2, y: 0.2, w: 5.0, h: 7.1,
+                sizing: { type: 'contain', w: 5.0, h: 7.1 }
+              });
+              photoLoaded = true;
+            }
+          }
+          if (!photoLoaded) {
+            slide.addText(gender === 'female' ? '👩' : '🧑', {
+              x: 0.2, y: 2.8, w: 5.0, h: 1.5, fontSize: 72, align: 'center'
+            });
+          }
+
+          // ID badge (top-left over photo)
+          slide.addShape('rect', {
+            x: 0.25, y: 0.25, w: 1.1, h: 0.48,
+            fill: { color: p.icon ? 'f59e0b' : accentHex }
+          });
+          slide.addText(`#${p.id}`, {
+            x: 0.25, y: 0.25, w: 1.1, h: 0.48,
+            fontSize: 17, bold: true, color: 'ffffff', fontFace: 'Arial', align: 'center'
+          });
+
+          // ── Right side details ──
+          const rx = 5.5; // right column x start
+
+          // Player name
+          slide.addText(p.name, {
+            x: rx, y: 0.35, w: 7.5, h: 1.1,
+            fontSize: 38, bold: true, color: 'f1f5f9', fontFace: 'Arial'
+          });
+
+          // Icon badge
+          let infoY = 1.5;
+          if (p.icon) {
+            slide.addShape('rect', {
+              x: rx, y: infoY, w: 2.4, h: 0.42,
+              fill: { color: '78350f' }, line: { color: 'f59e0b', width: 1 }
+            });
+            slide.addText('⭐ Icon Player', {
+              x: rx, y: infoY, w: 2.4, h: 0.42,
+              fontSize: 13, color: 'f59e0b', fontFace: 'Arial', bold: true, align: 'center'
+            });
+            infoY += 0.6;
+          }
+
+          // Role chip
+          slide.addShape('rect', {
+            x: rx, y: infoY, w: 2.4, h: 0.42,
+            fill: { color: '1e293b' }, line: { color: '475569', width: 1 }
+          });
+          slide.addText(p.role, {
+            x: rx, y: infoY, w: 2.4, h: 0.42,
+            fontSize: 13, color: '94a3b8', fontFace: 'Arial', align: 'center'
+          });
+          infoY += 0.75;
+
+          // Detail rows
+          const details = [
+            { label: 'PLAYER NAME', value: p.name },
+            { label: 'AGE', value: String(p.age) },
+            { label: 'ROLE', value: p.role },
+            { label: 'PLAYER ID', value: `#${p.id}` },
+          ];
+          for (const d of details) {
+            slide.addText(d.label, {
+              x: rx, y: infoY, w: 7.3, h: 0.28,
+              fontSize: 8.5, color: '475569', fontFace: 'Arial', charSpacing: 2
+            });
+            slide.addText(d.value, {
+              x: rx, y: infoY + 0.26, w: 7.3, h: 0.5,
+              fontSize: 22, bold: true, color: 'f1f5f9', fontFace: 'Arial'
+            });
+            infoY += 0.9;
+          }
+
+          // Bottom accent bar
+          slide.addShape('rect', {
+            x: 0, y: 7.2, w: 13.33, h: 0.3,
+            fill: { color: accentHex }
+          });
+          slide.addText(`Sanderao Premier League Season 6 — ${gLabel} Auction`, {
+            x: 0.3, y: 7.2, w: 12.7, h: 0.3,
+            fontSize: 9, color: 'ffffff', fontFace: 'Arial', align: 'right'
+          });
+        }
+
+        await pptx.writeFile({ fileName: `SPL_Season6_${gLabel.replace("'", "")}_Players.pptx` });
+        showMsg('✅ PPT downloaded!', 'ok');
+
+      } catch(err) {
+        console.error('PPT generation error:', err);
+        showMsg('❌ PPT failed: ' + (err.message || 'unknown error'), 'err');
+      } finally {
+        if (btn) { btn.disabled = false; btn.textContent = '📄 PPT'; }
+      }
+    };
   </script>
 </body>
 
