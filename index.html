@@ -1431,23 +1431,23 @@
       border-left: 3px solid var(--accent)
     }
 
-    .viewer-lock {
-      position: fixed;
-      bottom: 1.5rem;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 200;
-      background: rgba(245, 158, 11, 0.1);
-      border: 1px solid rgba(245, 158, 11, 0.3);
-      border-radius: 30px;
-      padding: 8px 20px;
-      font-size: 12px;
-      color: var(--gold);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      backdrop-filter: blur(8px);
-      white-space: nowrap
+    .site-footer {
+      margin-top: 2rem;
+      padding: 1rem 1.25rem 2rem;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      border-top: 1px solid var(--border);
+      background: rgba(10, 15, 30, 0.6);
+    }
+
+    .site-footer a {
+      color: var(--accent2);
+      text-decoration: none;
+    }
+
+    .site-footer strong {
+      color: var(--text);
     }
 
     .loading-screen {
@@ -1953,15 +1953,12 @@
       </div>
     </div>
 
-    <!-- Viewer lock -->
-    <div class="viewer-lock" id="viewerLock" style="display:none">
-      🔒 Viewer Mode — <a href="login.html" style="color:var(--gold);text-decoration:none;font-weight:600">Login as
-        Admin</a> to make changes
-      <span id="liveSyncBadge"
-        style="opacity:0;transition:opacity 0.4s;background:rgba(34,197,94,0.2);border:1px solid rgba(34,197,94,0.4);color:#86efac;padding:2px 8px;border-radius:20px;font-size:10px;margin-left:4px;letter-spacing:1px">●
-        LIVE</span>
-    </div>
   </div><!-- /mainApp -->
+
+  <footer class="site-footer">
+    <div><strong>Contact: Aryan Computers Solutions</strong> <a href="tel:9172811523">9172811523</a> for queries</div>
+    <div><strong>Instagram:</strong> <a href="https://instagram.com/aryjain07" target="_blank" rel="noopener noreferrer">@aryjain07</a></div>
+  </footer>
 
   <!-- SPOTLIGHT -->
   <div id="spotlight" onclick="closeSpotlight()">
@@ -2379,7 +2376,6 @@
       const resetBtn = document.getElementById('resetBtn');
       const logoutBtn = document.getElementById('logoutBtn');
       const loginLink = document.getElementById('loginLink');
-      const viewerLock = document.getElementById('viewerLock');
       const teamsAdminBtns = document.getElementById('teamsAdminBtns');
       const editRulesCard = document.getElementById('editRulesCard');
       const addPlayerBtn = document.getElementById('addPlayerBtn');
@@ -2390,7 +2386,6 @@
         resetBtn.style.display = 'inline-flex';
         logoutBtn.style.display = 'inline-flex';
         loginLink.style.display = 'none';
-        viewerLock.style.display = 'none';
         if (teamsAdminBtns) teamsAdminBtns.style.display = 'flex';
         if (editRulesCard) editRulesCard.style.display = 'block';
         if (addPlayerBtn) addPlayerBtn.style.display = 'inline-flex';
@@ -2401,7 +2396,6 @@
         resetBtn.style.display = 'none';
         logoutBtn.style.display = 'none';
         loginLink.style.display = 'inline-flex';
-        viewerLock.style.display = 'flex';
         if (teamsAdminBtns) teamsAdminBtns.style.display = 'none';
         if (editRulesCard) editRulesCard.style.display = 'none';
         if (addPlayerBtn) addPlayerBtn.style.display = 'none';
